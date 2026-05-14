@@ -1,0 +1,60 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <div>
+      <h1 class="text-2xl font-light tracking-widest uppercase">Configuración</h1>
+      <p class="text-white/50 text-sm mt-1">Ajustes globales del sistema.</p>
+    </div>
+  </div>
+
+  <div class="glass-panel rounded-xl p-8 max-w-3xl">
+
+    @if (loading) {
+      <p class="text-white/50 text-sm">Cargando configuración...</p>
+    }
+
+    @if (!loading && settings) {
+      <div class="space-y-6">
+
+        <!-- WhatsApp General -->
+        <!-- ✅ Campos individuales alineados al modelo BE (whatsapp_general, whatsapp_visas) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center border-b border-white/5 pb-6">
+          <div class="col-span-1">
+            <label class="text-sm text-white/70 block">WhatsApp General</label>
+            <span class="text-xs text-white/30">whatsapp_general</span>
+          </div>
+          <div class="col-span-1 md:col-span-2">
+            <input pInputText [(ngModel)]="settings.whatsapp_general"
+                   class="w-full bg-black/50 border-white/10"
+                   placeholder="+591 7XXXXXXX" />
+          </div>
+        </div>
+
+        <!-- WhatsApp Visas -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center border-b border-white/5 pb-6">
+          <div class="col-span-1">
+            <label class="text-sm text-white/70 block">WhatsApp Visas</label>
+            <span class="text-xs text-white/30">whatsapp_visas</span>
+          </div>
+          <div class="col-span-1 md:col-span-2">
+            <input pInputText [(ngModel)]="settings.whatsapp_visas"
+                   class="w-full bg-black/50 border-white/10"
+                   placeholder="+591 7XXXXXXX" />
+          </div>
+        </div>
+
+        <!-- Save button -->
+        <div class="flex justify-end pt-2">
+          <button pButton icon="pi pi-save" label="Guardar cambios"
+                  class="p-button-outlined"
+                  [disabled]="saving"
+                  (click)="saveSettings()">
+          </button>
+        </div>
+
+        @if (successMsg) {
+          <p class="text-green-400 text-sm text-right">{{ successMsg }}</p>
+        }
+      </div>
+    }
+  </div>
+</div>

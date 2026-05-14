@@ -1,0 +1,76 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <div>
+      <h1 class="text-2xl font-light tracking-widest uppercase">Ofertas</h1>
+      <p class="text-white/50 text-sm mt-1">Gestiona las ofertas para paquetes y eventos.</p>
+    </div>
+    <button pButton icon="pi pi-plus" label="Nueva Oferta" class="p-button-outlined p-button-sm" (click)="showDialog()"></button>
+  </div>
+
+  <div class="glass-panel rounded-xl overflow-hidden">
+    <p-table [value]="offers" [paginator]="true" [rows]="10" responsiveLayout="scroll" styleClass="p-datatable-sm p-datatable-dark">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Título</th>
+          <th>Paquete</th>
+          <th>Descuento</th>
+          <th>Fecha Inicio</th>
+          <th>Fecha Fin</th>
+          <th>Estado</th>
+          <th class="text-right">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-offer>
+        <tr>
+          <td class="font-medium">{{ offer.title }}</td>
+          <td>{{ offer.package?.name || 'N/A' }}</td>
+          <td>{{ offer.discount_percentage }}%</td>
+          <td>{{ offer.valid_from | date }}</td>
+          <td>{{ offer.valid_until | date }}</td>
+          <td>
+            <p-toggleswitch [ngModel]="offer.is_active" (onChange)="toggleStatus(offer)"></p-toggleswitch>
+          </td>
+          <td class="text-right space-x-2">
+            <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-sm" (click)="editOffer(offer)"></button>
+            <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger p-button-sm" (click)="deleteOffer(offer.id)"></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <p-dialog [(visible)]="displayDialog" [header]="isEditing ? 'Editar Oferta' : 'Nueva Oferta'" [modal]="true" [style]="{width: '500px'}" styleClass="p-fluid">
+    <form [formGroup]="form" (ngSubmit)="saveOffer()" class="space-y-4 mt-4">
+      <div class="field">
+        <label class="text-sm text-white/70 block mb-2">Título de la Oferta</label>
+        <input pInputText formControlName="title" class="w-full bg-black/50 border-white/10" />
+      </div>
+      <div class="field">
+        <label class="text-sm text-white/70 block mb-2">Paquete (Opcional)</label>
+        <p-select [options]="packages" formControlName="package_id" optionLabel="name" optionValue="id" placeholder="Seleccionar Paquete" [showClear]="true" styleClass="w-full"></p-select>
+      </div>
+      <div class="field">
+        <label class="text-sm text-white/70 block mb-2">Porcentaje de Descuento (%)</label>
+        <input pInputText type="number" formControlName="discount_percentage" class="w-full bg-black/50 border-white/10" />
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="field">
+          <label class="text-sm text-white/70 block mb-2">Válido Desde</label>
+          <p-datepicker formControlName="valid_from" [showIcon]="true" appendTo="body" styleClass="w-full"></p-datepicker>
+        </div>
+        <div class="field">
+          <label class="text-sm text-white/70 block mb-2">Válido Hasta</label>
+          <p-datepicker formControlName="valid_until" [showIcon]="true" appendTo="body" styleClass="w-full"></p-datepicker>
+        </div>
+      </div>
+      <div class="field flex items-center justify-between pt-2">
+        <label class="text-sm text-white/70">Activo</label>
+        <p-toggleswitch formControlName="is_active"></p-toggleswitch>
+      </div>
+    </form>
+    <ng-template pTemplate="footer">
+      <button pButton label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="displayDialog = false"></button>
+      <button pButton label="Guardar" icon="pi pi-check" class="p-button-outlined" [disabled]="form.invalid" (click)="saveOffer()"></button>
+    </ng-template>
+  </p-dialog>
+</div>

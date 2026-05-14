@@ -1,0 +1,125 @@
+<div class="min-h-screen bg-gray-50 dark:bg-[#0f0f0f] text-zinc-900 dark:text-white flex flex-col">
+
+  <!-- Navbar -->
+  <nav
+    class="fixed top-0 left-0 w-full z-50 transition-all duration-500"
+    [ngClass]="scrolled ? 'bg-white dark:bg-black shadow-lg border-b border-zinc-200 dark:border-white/10' : ''"
+  >
+  <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+
+    <!-- Logo -->
+    <a routerLink="/" class="flex items-center gap-3 group py-2">
+      <img src="logo.png" alt="Elevate Travel MR" class="h-[72px] w-auto object-contain transition-transform duration-300 group-hover:scale-105">
+    </a>
+
+    <!-- Links (desktop) -->
+    <div class="hidden md:flex items-center gap-10">
+      <a routerLink="/destinations" class="nav-link text-xs tracking-widest uppercase transition-colors duration-200 relative group"
+         [ngClass]="(isHome && !scrolled) ? 'text-white/60 hover:text-white' : 'text-zinc-900 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white'">
+        Destinos
+        <span class="absolute -bottom-1 left-0 w-0 h-px bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+      </a>
+      <a routerLink="/packages" class="nav-link text-xs tracking-widest uppercase transition-colors duration-200 relative group"
+         [ngClass]="(isHome && !scrolled) ? 'text-white/60 hover:text-white' : 'text-zinc-900 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white'">
+        Paquetes
+        <span class="absolute -bottom-1 left-0 w-0 h-px bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+      </a>
+      <a routerLink="/events" class="nav-link text-xs tracking-widest uppercase transition-colors duration-200 relative group"
+         [ngClass]="(isHome && !scrolled) ? 'text-white/60 hover:text-white' : 'text-zinc-900 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white'">
+        Eventos
+        <span class="absolute -bottom-1 left-0 w-0 h-px bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+      </a>
+      <a routerLink="/visas" class="nav-link text-xs tracking-widest uppercase transition-colors duration-200 relative group"
+         [ngClass]="(isHome && !scrolled) ? 'text-white/60 hover:text-white' : 'text-zinc-900 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white'">
+        Visas
+        <span class="absolute -bottom-1 left-0 w-0 h-px bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+      </a>
+    </div>
+
+    <div class="hidden md:flex items-center gap-4">
+      <!-- Theme Toggle -->
+      <button (click)="themeService.toggleTheme()" class="flex items-center justify-center w-10 h-10 rounded-full border transition-all duration-300"
+              [ngClass]="(isHome && !scrolled) ? 'text-white border-white/20 hover:bg-white/10' : 'bg-white dark:bg-black border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-white/5'">
+        <i class="pi" [ngClass]="themeService.isDark() ? 'pi-sun' : 'pi-moon'"></i>
+      </button>
+
+      <!-- Admin CTA -->
+      <a
+        routerLink="/login"
+        class="flex items-center gap-2 text-xs tracking-widest uppercase border px-5 py-2.5 rounded-full hover:bg-amber-400 hover:text-black hover:border-amber-400 transition-all duration-300 font-medium"
+        [ngClass]="(isHome && !scrolled) ? 'text-white border-white/20' : 'text-zinc-900 dark:text-white border-zinc-300 dark:border-white/20'"
+      >
+        <i class="pi pi-lock text-xs"></i>
+        Portal Admin
+      </a>
+    </div>
+
+    <!-- Mobile hamburger -->
+    <button class="md:hidden p-2" [ngClass]="(isHome && !scrolled) ? 'text-white' : 'text-zinc-900 dark:text-white'" (click)="menuOpen = !menuOpen">
+      <i class="pi text-xl" [class.pi-bars]="!menuOpen" [class.pi-times]="menuOpen"></i>
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div
+    class="md:hidden overflow-hidden transition-all duration-300 bg-white dark:bg-black border-t border-zinc-200 dark:border-white/10"
+    [class.max-h-0]="!menuOpen"
+    [class.max-h-96]="menuOpen"
+  >
+    <div class="px-6 py-6 flex flex-col gap-5">
+      <a routerLink="/destinations" class="text-xs tracking-widest uppercase text-zinc-900 dark:text-white/70" (click)="menuOpen = false">Destinos</a>
+      <a routerLink="/packages" class="text-xs tracking-widest uppercase text-zinc-900 dark:text-white/70" (click)="menuOpen = false">Paquetes</a>
+      <a routerLink="/events" class="text-xs tracking-widest uppercase text-zinc-900 dark:text-white/70" (click)="menuOpen = false">Eventos</a>
+      <a routerLink="/visas" class="text-xs tracking-widest uppercase text-zinc-900 dark:text-white/70" (click)="menuOpen = false">Visas</a>
+      <a routerLink="/login" class="text-xs tracking-widest uppercase text-amber-400" (click)="menuOpen = false">Portal Admin</a>
+    </div>
+  </div>
+  </nav>
+
+  <!-- Content -->
+  <main class="flex-1">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- WhatsApp flotante -->
+  <a
+    href="https://wa.me/1234567890"
+    target="_blank"
+    class="fixed bottom-8 right-8 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center text-zinc-900 dark:text-white shadow-[0_0_24px_rgba(34,197,94,0.4)] hover:scale-110 hover:shadow-[0_0_36px_rgba(34,197,94,0.6)] transition-all z-50"
+  >
+    <i class="pi pi-whatsapp text-2xl"></i>
+  </a>
+
+  <!-- Footer -->
+  <footer class="bg-white dark:bg-black border-t border-zinc-200 dark:border-white/10 py-16">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-3 mb-6">
+          <img src="logo.png" alt="Elevate Travel MR" class="h-28 w-auto object-contain">
+        </div>
+        <p class="text-zinc-900 dark:text-white/40 font-light max-w-xs leading-relaxed text-sm">
+          Experiencias de viaje exclusivas, diseñadas para quienes exigen lo mejor del mundo.
+        </p>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold tracking-widest uppercase mb-5 text-zinc-900 dark:text-white/80">Explorar</h4>
+        <ul class="space-y-3 text-zinc-900 dark:text-white/40 text-sm">
+          <li><a routerLink="/destinations" class="hover:text-zinc-900 dark:text-white transition-colors">Destinos</a></li>
+          <li><a routerLink="/packages" class="hover:text-zinc-900 dark:text-white transition-colors">Paquetes</a></li>
+          <li><a routerLink="/events" class="hover:text-zinc-900 dark:text-white transition-colors">Eventos</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold tracking-widest uppercase mb-5 text-zinc-900 dark:text-white/80">Contacto</h4>
+        <ul class="space-y-3 text-zinc-900 dark:text-white/40 text-sm">
+          <li>hello&#64;elevatetravel.com</li>
+          <li>+1 234 567 890</li>
+        </ul>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-zinc-100 dark:border-white/5 flex justify-between items-center text-zinc-900 dark:text-white/20 text-xs tracking-widest uppercase">
+      <span>&copy; 2026 Elevate Travel MR.</span>
+      <span>All rights reserved.</span>
+    </div>
+  </footer>
+</div>

@@ -1,0 +1,65 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <div>
+      <h1 class="text-2xl font-light tracking-widest uppercase">Destinos</h1>
+      <p class="text-white/50 text-sm mt-1">Gestiona los países y ciudades disponibles.</p>
+    </div>
+    <button pButton icon="pi pi-plus" label="Nuevo Destino" class="p-button-outlined p-button-sm" (click)="showDialog()"></button>
+  </div>
+
+  <div class="glass-panel rounded-xl overflow-hidden">
+    <p-table [value]="destinations" [paginator]="true" [rows]="10" responsiveLayout="scroll" styleClass="p-datatable-sm p-datatable-dark">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Imagen</th>
+          <th>País</th>
+          <th>Ciudad</th>
+          <th>Estado</th>
+          <th class="text-right">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-dest>
+        <tr>
+          <td><img [src]="dest.photo_url" class="w-12 h-12 object-cover rounded-lg" alt="Destino"></td>
+          <td class="font-medium">{{ dest.country }}</td>
+          <td>{{ dest.city }}</td>
+          <td>
+            <p-toggleswitch [ngModel]="dest.is_active" (onChange)="toggleStatus(dest)"></p-toggleswitch>
+          </td>
+          <td class="text-right space-x-2">
+            <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-sm" (click)="editDestination(dest)"></button>
+            <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger p-button-sm" (click)="deleteDestination(dest.id)"></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <p-dialog [(visible)]="displayDialog" [header]="isEditing ? 'Editar Destino' : 'Nuevo Destino'" [modal]="true" [style]="{width: '450px'}" styleClass="p-fluid">
+    <form [formGroup]="form" (ngSubmit)="saveDestination()" class="space-y-4 mt-4">
+      <div class="field">
+        <label class="text-sm text-white/70 block mb-2">País</label>
+        <input pInputText list="countriesList" autocomplete="off" formControlName="country" class="w-full bg-black/50 border-white/10" />
+        <datalist id="countriesList">
+          <option *ngFor="let country of countries" [value]="country"></option>
+        </datalist>
+      </div>
+      <div class="field">
+        <label class="text-sm text-white/70 block mb-2">Ciudad (Opcional)</label>
+        <input pInputText formControlName="city" class="w-full bg-black/50 border-white/10" />
+      </div>
+      <div class="field">
+        <label class="text-sm text-white/70 block mb-2">URL de Fotografía</label>
+        <input pInputText formControlName="photo_url" class="w-full bg-black/50 border-white/10" />
+      </div>
+      <div class="field flex items-center justify-between pt-2">
+        <label class="text-sm text-white/70">Activo</label>
+        <p-toggleswitch formControlName="is_active"></p-toggleswitch>
+      </div>
+    </form>
+    <ng-template pTemplate="footer">
+      <button pButton label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="displayDialog = false"></button>
+      <button pButton label="Guardar" icon="pi pi-check" class="p-button-outlined" [disabled]="form.invalid" (click)="saveDestination()"></button>
+    </ng-template>
+  </p-dialog>
+</div>

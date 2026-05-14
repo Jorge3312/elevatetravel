@@ -1,0 +1,55 @@
+<div class="min-h-screen bg-[#0a0a0a] text-white flex">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-black/50 border-r border-white/10 flex flex-col">
+    <div class="p-6">
+      <img src="logo.png" alt="Elevate Travel MR" class="h-24 w-auto object-contain mb-4">
+      <p class="text-xs text-white/50 tracking-widest mt-1">Backoffice</p>
+    </div>
+
+    <nav class="flex-1 px-4 space-y-2 mt-8">
+      <a routerLink="/admin" routerLinkActive="bg-white/10 text-white" [routerLinkActiveOptions]="{exact: true}" class="block px-4 py-3 rounded-lg text-white/70 hover:bg-white/5 hover:text-white transition-colors">
+        <i class="pi pi-home mr-3"></i> Dashboard
+      </a>
+      <a routerLink="/admin/destinations" routerLinkActive="bg-white/10 text-white" class="block px-4 py-3 rounded-lg text-white/70 hover:bg-white/5 hover:text-white transition-colors">
+        <i class="pi pi-map-marker mr-3"></i> Destinos
+      </a>
+      <a routerLink="/admin/events" routerLinkActive="bg-white/10 text-white" class="block px-4 py-3 rounded-lg text-white/70 hover:bg-white/5 hover:text-white transition-colors">
+        <i class="pi pi-calendar mr-3"></i> Eventos
+      </a>
+      <a routerLink="/admin/packages" routerLinkActive="bg-white/10 text-white" class="block px-4 py-3 rounded-lg text-white/70 hover:bg-white/5 hover:text-white transition-colors">
+        <i class="pi pi-briefcase mr-3"></i> Paquetes
+      </a>
+      <a routerLink="/admin/offers" routerLinkActive="bg-white/10 text-white" class="block px-4 py-3 rounded-lg text-white/70 hover:bg-white/5 hover:text-white transition-colors">
+        <i class="pi pi-tags mr-3"></i> Ofertas
+      </a>
+      <a routerLink="/admin/visas" routerLinkActive="bg-white/10 text-white" class="block px-4 py-3 rounded-lg text-white/70 hover:bg-white/5 hover:text-white transition-colors">
+        <i class="pi pi-id-card mr-3"></i> Visas
+      </a>
+      <a routerLink="/admin/config" routerLinkActive="bg-white/10 text-white" class="block px-4 py-3 rounded-lg text-white/70 hover:bg-white/5 hover:text-white transition-colors">
+        <i class="pi pi-cog mr-3"></i> Configuración
+      </a>
+    </nav>
+
+    <div class="p-4 border-t border-white/10">
+      <button (click)="logout()" class="w-full flex items-center px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
+        <i class="pi pi-sign-out mr-3"></i> Cerrar Sesión
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 flex flex-col overflow-hidden">
+    <header class="h-16 bg-black/30 border-b border-white/10 flex items-center justify-end px-8">
+      <div class="flex items-center space-x-4">
+        <span class="text-sm text-white/70">Admin User</span>
+        <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+          <i class="pi pi-user text-white/70"></i>
+        </div>
+      </div>
+    </header>
+
+    <div class="flex-1 overflow-auto p-8">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

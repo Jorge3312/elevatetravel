@@ -1,0 +1,88 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <div>
+      <h1 class="text-2xl font-light tracking-widest uppercase">Eventos</h1>
+      <p class="text-white/50 text-sm mt-1">Gestiona eventos exclusivos por destino.</p>
+    </div>
+    <button pButton icon="pi pi-plus" label="Nuevo Evento" class="p-button-outlined p-button-sm" (click)="showDialog()"></button>
+  </div>
+
+  <div class="glass-panel rounded-xl overflow-hidden">
+    <p-table [value]="events" [paginator]="true" [rows]="10" responsiveLayout="scroll" styleClass="p-datatable-sm p-datatable-dark">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nombre</th>
+          <th>Salida / Retorno</th>
+          <th>Destino</th>
+          <th>Incluye</th>
+          <th>Precio</th>
+          <th>Estado</th>
+          <th class="text-right">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-evt>
+        <tr>
+          <td class="font-medium">{{ evt.name }}</td>
+          <td>{{ evt.start_date | date:'dd MMM yyyy' }}<br/><span class="text-xs text-white/50">{{ evt.end_date | date:'dd MMM yyyy' }}</span></td>
+          <td>{{ evt.destination?.country }}</td>
+          <td><span class="text-xs text-white/70">{{ evt.includes?.length ? evt.includes.length + ' servicios' : 'Ninguno' }}</span></td>
+          <td>{{ evt.price_from | currency }}</td>
+          <td>
+            <p-toggleswitch [ngModel]="evt.is_active" (onChange)="toggleStatus(evt)"></p-toggleswitch>
+          </td>
+          <td class="text-right space-x-2">
+            <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-sm" (click)="editEvent(evt)"></button>
+            <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger p-button-sm" (click)="deleteEvent(evt.id)"></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <p-dialog [(visible)]="displayDialog" [header]="isEditing ? 'Editar Evento' : 'Nuevo Evento'" [modal]="true" [style]="{width: '500px'}" styleClass="p-fluid">
+    <form [formGroup]="form" (ngSubmit)="saveEvent()" class="space-y-4 mt-4">
+      <div class="field">
+        <label class="text-sm text-white/70 block mb-2">Nombre del Evento</label>
+        <input pInputText formControlName="name" class="w-full bg-black/50 border-white/10" />
+      </div>
+      <div class="field">
+        <label class="text-sm text-white/70 block mb-2">Destino</label>
+        <p-select [options]="destinations" formControlName="destination_id" optionLabel="country" optionValue="id" placeholder="Seleccionar Destino" styleClass="w-full"></p-select>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="field">
+          <label class="text-sm text-white/70 block mb-2">Salida</label>
+          <p-datepicker formControlName="start_date" [showIcon]="true" appendTo="body" styleClass="w-full"></p-datepicker>
+        </div>
+        <div class="field">
+          <label class="text-sm text-white/70 block mb-2">Retorno</label>
+          <p-datepicker formControlName="end_date" [showIcon]="true" appendTo="body" styleClass="w-full"></p-datepicker>
+        </div>
+      </div>
+      <div class="field">
+        <label class="text-sm text-white/70 block mb-2">Incluye (Servicios)</label>
+        <p-multiselect [options]="includesOptions" formControlName="includes" optionLabel="label" optionValue="value" placeholder="Seleccionar opciones" appendTo="body" styleClass="w-full" display="chip"></p-multiselect>
+      </div>
+      <div class="field">
+        <label class="text-sm text-white/70 block mb-2">Descripción</label>
+        <textarea pTextarea formControlName="description" rows="3" class="w-full bg-black/50 border-white/10"></textarea>
+      </div>
+      <div class="field">
+        <label class="text-sm text-white/70 block mb-2">Precio Base ($)</label>
+        <input pInputText type="number" formControlName="base_price" class="w-full bg-black/50 border-white/10" />
+      </div>
+      <div class="field">
+        <label class="text-sm text-white/70 block mb-2">URL de Imagen</label>
+        <input pInputText formControlName="photo_url" class="w-full bg-black/50 border-white/10" />
+      </div>
+      <div class="field flex items-center justify-between pt-2">
+        <label class="text-sm text-white/70">Activo</label>
+        <p-toggleswitch formControlName="is_active"></p-toggleswitch>
+      </div>
+    </form>
+    <ng-template pTemplate="footer">
+      <button pButton label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="displayDialog = false"></button>
+      <button pButton label="Guardar" icon="pi pi-check" class="p-button-outlined" [disabled]="form.invalid" (click)="saveEvent()"></button>
+    </ng-template>
+  </p-dialog>
+</div>

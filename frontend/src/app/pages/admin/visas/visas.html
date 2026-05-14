@@ -1,0 +1,88 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <div>
+      <h1 class="text-2xl font-light tracking-widest uppercase">Visas</h1>
+      <p class="text-white/50 text-sm mt-1">Gestiona la información de visado por destino.</p>
+    </div>
+    <button pButton icon="pi pi-plus" label="Nueva Visa" class="p-button-outlined p-button-sm" (click)="showDialog()"></button>
+  </div>
+
+  <div class="glass-panel rounded-xl overflow-hidden">
+    <p-table [value]="visas" [paginator]="true" [rows]="10" responsiveLayout="scroll" styleClass="p-datatable-sm p-datatable-dark">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Destino</th>
+          <th>Tipo de Visa</th>
+          <th>Estado</th>
+          <th class="text-right">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-visa>
+        <tr>
+          <td class="font-medium">{{ visa.destination?.city }}, {{ visa.destination?.country }}</td>
+          <td>{{ visa.visa_type }}</td>
+          <td>
+            <p-toggleswitch [ngModel]="visa.is_active" (onChange)="toggleStatus(visa)"></p-toggleswitch>
+          </td>
+          <td class="text-right space-x-2">
+            <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-sm" (click)="editVisa(visa)"></button>
+            <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger p-button-sm" (click)="deleteVisa(visa.id)"></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <p-dialog [(visible)]="displayDialog" [header]="isEditing ? 'Editar Visa' : 'Nueva Visa'" [modal]="true" [style]="{width: '700px'}" styleClass="p-fluid">
+    <form [formGroup]="form" (ngSubmit)="saveVisa()" class="space-y-4 mt-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="field">
+          <label class="text-sm text-white/70 block mb-2">Destino</label>
+          <p-select [options]="destinations" formControlName="destination_id" optionLabel="country" optionValue="id" placeholder="Seleccionar Destino" styleClass="w-full">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+              <div *ngIf="selectedOption">{{ selectedOption.country }} <span *ngIf="selectedOption.city"> - {{ selectedOption.city }}</span></div>
+            </ng-template>
+            <ng-template pTemplate="item" let-dest>
+              <div>{{ dest.country }} <span *ngIf="dest.city"> - {{ dest.city }}</span></div>
+            </ng-template>
+          </p-select>
+        </div>
+        <div class="field">
+          <label class="text-sm text-white/70 block mb-2">Tipo de Visa</label>
+          <input pInputText formControlName="visa_type" class="w-full bg-black/50 border-white/10" placeholder="Ej. Turista, Negocios" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="text-sm text-white/70 block mb-2">URL de Fotografía</label>
+        <input pInputText formControlName="photo_url" class="w-full bg-black/50 border-white/10" placeholder="https://..." />
+      </div>
+
+      <div class="field">
+        <label class="text-sm text-white/70 block mb-2">Requisitos</label>
+        <div class="flex gap-2 mb-3">
+          <input pInputText [(ngModel)]="newRequirement" [ngModelOptions]="{standalone: true}" class="flex-1 bg-black/50 border-white/10" placeholder="Añadir un requisito..." (keyup.enter)="addRequirement(); $event.preventDefault();" />
+          <button type="button" pButton icon="pi pi-plus" (click)="addRequirement()" class="p-button-outlined"></button>
+        </div>
+        <div class="space-y-2 max-h-48 overflow-y-auto">
+          <div *ngFor="let req of requirementsList; let i = index" class="flex items-start justify-between bg-white/5 p-3 rounded-lg border border-white/10">
+            <span class="text-sm">{{ req }}</span>
+            <button type="button" pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger p-button-sm -my-2 -mr-2" (click)="removeRequirement(i)"></button>
+          </div>
+          <div *ngIf="requirementsList.length === 0" class="text-sm text-white/40 italic text-center py-4 border border-dashed border-white/10 rounded-lg">
+            No hay requisitos añadidos.
+          </div>
+        </div>
+      </div>
+
+      <div class="field flex items-center justify-between pt-2">
+        <label class="text-sm text-white/70">Activo</label>
+        <p-toggleswitch formControlName="is_active"></p-toggleswitch>
+      </div>
+    </form>
+    <ng-template pTemplate="footer">
+      <button pButton label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="displayDialog = false"></button>
+      <button pButton label="Guardar" icon="pi pi-check" class="p-button-outlined" [disabled]="form.invalid" (click)="saveVisa()"></button>
+    </ng-template>
+  </p-dialog>
+</div>

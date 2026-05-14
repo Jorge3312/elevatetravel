@@ -1,0 +1,86 @@
+@if (!selectedDestination) {
+<div class="pt-32 pb-20 px-6 max-w-7xl mx-auto min-h-screen">
+  <div class="mb-16">
+    <span class="text-zinc-900 dark:text-white/50 text-xs tracking-[0.3em] uppercase mb-4 block">Explora el Mundo</span>
+    <h1 class="text-4xl md:text-6xl font-light tracking-tight">Destinos</h1>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    @for (dest of destinations; track dest.id) {
+      <div class="relative h-80 md:h-[420px] overflow-hidden group cursor-pointer rounded-xl" (click)="showDetails(dest)">
+        <img [src]="dest.photo_url || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070'" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <div class="absolute bottom-0 left-0 p-6 w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+          <span class="text-[10px] tracking-widest uppercase text-amber-400 font-medium block mb-1">{{ dest.country }}</span>
+          <h3 class="text-2xl font-display font-bold uppercase tracking-wide text-zinc-900 dark:text-white">{{ dest.city }}</h3>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+} @else {
+<div class="pt-32 pb-20 px-6 max-w-7xl mx-auto min-h-screen">
+  <button (click)="closeDetails()" class="mb-8 text-zinc-900 dark:text-white/50 hover:text-zinc-900 dark:text-white transition-colors flex items-center gap-2 text-sm uppercase tracking-widest">
+    <i class="pi pi-arrow-left"></i> Volver a Destinos
+  </button>
+  
+  <div class="mb-16 border-b border-zinc-200 dark:border-white/10 pb-8">
+    <span class="text-zinc-900 dark:text-white/50 text-xs tracking-[0.3em] uppercase mb-4 block">{{ selectedDestination.country }}</span>
+    <h1 class="text-4xl md:text-6xl font-light tracking-tight">{{ selectedDestination.city }}</h1>
+    <p class="text-zinc-900 dark:text-white/60 mt-4 max-w-2xl text-lg">{{ selectedDestination.description }}</p>
+  </div>
+
+  @if (destEvents.length > 0) {
+    <div class="mb-16">
+      <h2 class="text-2xl tracking-widest uppercase mb-8">Eventos en {{ selectedDestination.city }}</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        @for (evt of destEvents; track evt.id) {
+          <div class="glass-panel rounded-2xl overflow-hidden cursor-pointer group" [routerLink]="['/events']" [queryParams]="{id: evt.id}">
+            <div class="h-48 relative overflow-hidden">
+              <img [src]="evt.photo_url || selectedDestination.photo_url" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+              <div class="absolute top-4 left-4 bg-white dark:bg-black/50 backdrop-blur-md px-3 py-1 rounded-full text-[10px] tracking-widest uppercase">Evento</div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-lg font-light mb-2">{{ evt.name }}</h3>
+              <div class="flex justify-between items-center text-sm text-zinc-900 dark:text-white/50">
+                <span>{{ evt.event_date | date }}</span>
+                <span class="text-zinc-900 dark:text-white">{{ evt.price_from || evt.base_price | currency }}</span>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  @if (destPackages.length > 0) {
+    <div class="mb-16">
+      <h2 class="text-2xl tracking-widest uppercase mb-8">Paquetes a {{ selectedDestination.city }}</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        @for (pkg of destPackages; track pkg.id) {
+          <div class="glass-panel rounded-2xl overflow-hidden cursor-pointer group" [routerLink]="['/packages']" [queryParams]="{id: pkg.id}">
+            <div class="h-48 relative overflow-hidden">
+              <img [src]="pkg.photo_url || selectedDestination.photo_url" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+              <div class="absolute top-4 left-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-[10px] tracking-widest uppercase text-zinc-900 dark:text-white">Paquete</div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-lg font-light mb-2">{{ pkg.name }}</h3>
+              <div class="flex justify-between items-center text-sm text-zinc-900 dark:text-white/50">
+                <span>{{ pkg.days }} Días</span>
+                <span class="text-zinc-900 dark:text-white">{{ pkg.price_from || pkg.base_price | currency }}</span>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  @if (destEvents.length === 0 && destPackages.length === 0) {
+    <div class="text-center py-20 text-zinc-900 dark:text-white/30 border border-zinc-100 dark:border-white/5 rounded-2xl">
+      <i class="pi pi-compass text-4xl mb-4 block"></i>
+      <p class="tracking-widest uppercase text-sm">Próximamente nuevas experiencias en este destino</p>
+    </div>
+  }
+</div>
+}

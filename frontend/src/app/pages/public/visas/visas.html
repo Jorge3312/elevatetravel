@@ -1,0 +1,86 @@
+@if (!selectedItem) {
+<div class="pt-32 pb-20 px-6 max-w-7xl mx-auto min-h-screen">
+  <div class="mb-16">
+    <span class="text-zinc-900 dark:text-white/50 text-xs tracking-[0.3em] uppercase mb-4 block">Trámites</span>
+    <h1 class="text-4xl md:text-6xl font-light tracking-tight">Visas</h1>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    @for (visa of visas; track visa.id) {
+      <div class="glass-panel rounded-2xl overflow-hidden cursor-pointer group" (click)="showDetails(visa)">
+        <div class="h-48 relative overflow-hidden flex items-center justify-center bg-white dark:bg-black/5 dark:bg-white/5">
+          <img *ngIf="visa.photo_url" [src]="visa.photo_url" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Visa">
+          <i *ngIf="!visa.photo_url" class="pi pi-id-card text-6xl text-zinc-900 dark:text-white/20 group-hover:scale-110 transition-transform duration-700"></i>
+          <div class="absolute top-4 left-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs tracking-widest uppercase">Trámite</div>
+        </div>
+        <div class="p-6">
+          <p class="text-zinc-900 dark:text-white/50 text-xs tracking-widest uppercase mb-2">{{ visa.destination?.country || 'Global' }}</p>
+          <h3 class="text-xl font-light mb-4">{{ visa.visa_type || 'Visa' }}</h3>
+          <div class="flex justify-between items-center text-sm">
+            <span class="font-medium text-amber-400">Ver requisitos</span>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+} @else {
+<!-- Detail Section -->
+<div class="pt-32 pb-20 px-6 max-w-7xl mx-auto animate-fadein min-h-screen">
+  <button (click)="closeDetails()" class="mb-8 text-zinc-900 dark:text-white/50 hover:text-zinc-900 dark:text-white transition-colors flex items-center gap-2 text-sm uppercase tracking-widest">
+    <i class="pi pi-arrow-left"></i> Volver a Visas
+  </button>
+  
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+    <!-- Image Column -->
+    <div class="rounded-3xl overflow-hidden h-[400px] lg:h-[700px] relative border border-zinc-100 dark:border-white/5 flex flex-col items-center justify-center bg-white dark:bg-black/5 dark:bg-white/5">
+      <img *ngIf="selectedItem.photo_url" [src]="selectedItem.photo_url" class="w-full h-full object-cover">
+      <i *ngIf="!selectedItem.photo_url" class="pi pi-id-card text-9xl text-zinc-900 dark:text-white/10 mb-8"></i>
+      <div class="absolute top-6 left-6 bg-white dark:bg-black/60 backdrop-blur-md px-4 py-2 rounded-full text-xs tracking-widest uppercase border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white">
+        Visa
+      </div>
+    </div>
+    
+    <!-- Details Column -->
+    <div class="flex flex-col justify-center">
+      <div class="inline-flex items-center gap-2 text-zinc-900 dark:text-white/50 text-xs tracking-[0.2em] uppercase mb-4">
+        <i class="pi pi-globe text-zinc-900 dark:text-white/40"></i>
+        <span>País: {{ selectedItem.destination?.country || 'Global' }}</span>
+      </div>
+      
+      <h1 class="text-4xl md:text-5xl font-light tracking-tight mb-6 leading-tight">{{ selectedItem.visa_type }}</h1>
+      
+      <p class="text-zinc-900 dark:text-white/70 font-light leading-relaxed mb-8 text-lg">
+        {{ selectedItem.description || 'Gestión y asesoramiento completo para la obtención de tu visa. Nuestro equipo de expertos te guiará paso a paso en todo el proceso.' }}
+      </p>
+      
+      @if (selectedItem.parsedRequirements && selectedItem.parsedRequirements.length > 0) {
+        <div class="mb-10">
+          <h3 class="text-sm font-medium mb-5 uppercase tracking-widest text-zinc-900 dark:text-white/60">Requisitos principales:</h3>
+          <div class="grid grid-cols-1 gap-4">
+            @for (req of selectedItem.parsedRequirements; track $index) {
+              <div class="bg-white dark:bg-black/5 dark:bg-white/5 rounded-2xl p-4 flex items-center gap-5 border border-zinc-100 dark:border-white/5 hover:bg-white dark:bg-black/10 dark:bg-white/10 transition-colors">
+                <div class="bg-white dark:bg-black/10 dark:bg-white/10 rounded-full w-10 h-10 flex items-center justify-center shrink-0">
+                  <i class="pi pi-check text-zinc-900 dark:text-white/80 text-lg"></i>
+                </div>
+                <span class="text-zinc-900 dark:text-white/80 font-light">{{ req }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="bg-white dark:bg-black/40 rounded-3xl p-8 backdrop-blur-md border border-zinc-200 dark:border-white/10 mt-auto shadow-2xl">
+        <div class="space-y-4">
+          <h4 class="text-xs tracking-widest uppercase text-zinc-900 dark:text-white/50 text-center mb-6">¿Tienes preguntas o deseas iniciar el trámite?</h4>
+          <a href="https://wa.me/1234567890?text=Hola, necesito información sobre la visa de {{ selectedItem.visa_type }} para {{ selectedItem.destination?.country }}" target="_blank" 
+             class="flex items-center justify-center gap-3 w-full bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20 border border-[#25D366]/20 px-6 py-4 rounded-full text-sm uppercase tracking-widest transition-all hover:scale-[1.02]">
+            <i class="pi pi-whatsapp text-xl"></i>
+            Contactar por Whatsapp
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}

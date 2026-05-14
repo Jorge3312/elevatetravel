@@ -1,0 +1,91 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <div>
+      <h1 class="text-2xl font-light tracking-widest uppercase">Paquetes</h1>
+      <p class="text-white/50 text-sm mt-1">Gestiona los paquetes de viaje.</p>
+    </div>
+    <button pButton icon="pi pi-plus" label="Nuevo Paquete" class="p-button-outlined p-button-sm" (click)="showDialog()"></button>
+  </div>
+
+  <div class="glass-panel rounded-xl overflow-hidden">
+    <p-table [value]="packages" [paginator]="true" [rows]="10" responsiveLayout="scroll" styleClass="p-datatable-sm p-datatable-dark">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nombre</th>
+          <th>Destino</th>
+          <th>Días</th>
+          <th>Noches</th>
+          <th>Precio</th>
+          <th>Estado</th>
+          <th class="text-right">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-pkg>
+        <tr>
+          <td class="font-medium">{{ pkg.name }}</td>
+          <td>{{ pkg.destination?.country }}</td>
+          <td>{{ pkg.days }}</td>
+          <td>{{ pkg.nights }}</td>
+          <td>{{ pkg.price_from | currency }}</td>
+          <td>
+            <p-toggleswitch [ngModel]="pkg.is_active" (onChange)="toggleStatus(pkg)"></p-toggleswitch>
+          </td>
+          <td class="text-right space-x-2">
+            <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-sm" (click)="editPackage(pkg)"></button>
+            <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger p-button-sm" (click)="deletePackage(pkg.id)"></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <p-dialog [(visible)]="displayDialog" [header]="isEditing ? 'Editar Paquete' : 'Nuevo Paquete'" [modal]="true" [style]="{width: '500px'}" styleClass="p-fluid">
+    <form [formGroup]="form" (ngSubmit)="savePackage()" class="space-y-4 mt-4">
+      <div class="field">
+        <label class="text-sm text-white/70 block mb-2">Nombre del Paquete</label>
+        <input pInputText formControlName="name" class="w-full bg-black/50 border-white/10" />
+      </div>
+      <div class="field">
+        <label class="text-sm text-white/70 block mb-2">Destino</label>
+        <p-select [options]="destinations" formControlName="destination_id" optionLabel="country" optionValue="id" placeholder="Seleccionar Destino" styleClass="w-full"></p-select>
+      </div>
+      <div class="field">
+        <label class="text-sm text-white/70 block mb-2">Descripción</label>
+        <textarea pTextarea formControlName="description" rows="3" class="w-full bg-black/50 border-white/10"></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="field">
+          <label class="text-sm text-white/70 block mb-2">Días</label>
+          <input pInputText type="number" formControlName="days" class="w-full bg-black/50 border-white/10" />
+        </div>
+        <div class="field">
+          <label class="text-sm text-white/70 block mb-2">Noches</label>
+          <input pInputText type="number" formControlName="nights" class="w-full bg-black/50 border-white/10" />
+        </div>
+      </div>
+      @if (form.errors?.['invalidNights']) {
+        <small class="text-red-400 block -mt-2">Las noches no pueden ser mayores a los días.</small>
+      }
+      <div class="field">
+        <label class="text-sm text-white/70 block mb-2">Incluye (Servicios)</label>
+        <p-multiSelect [options]="includesOptions" formControlName="includes" optionLabel="label" optionValue="value" placeholder="Seleccionar servicios" styleClass="w-full" display="chip"></p-multiSelect>
+      </div>
+      <div class="field">
+        <label class="text-sm text-white/70 block mb-2">URL de Imagen</label>
+        <input pInputText formControlName="photo_url" class="w-full bg-black/50 border-white/10" placeholder="https://..." />
+      </div>
+      <div class="field">
+        <label class="text-sm text-white/70 block mb-2">Precio Base ($)</label>
+        <input pInputText type="number" formControlName="price_from" class="w-full bg-black/50 border-white/10" />
+      </div>
+      <div class="field flex items-center justify-between pt-2">
+        <label class="text-sm text-white/70">Activo</label>
+        <p-toggleswitch formControlName="is_active"></p-toggleswitch>
+      </div>
+    </form>
+    <ng-template pTemplate="footer">
+      <button pButton label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="displayDialog = false"></button>
+      <button pButton label="Guardar" icon="pi pi-check" class="p-button-outlined" [disabled]="form.invalid" (click)="savePackage()"></button>
+    </ng-template>
+  </p-dialog>
+</div>

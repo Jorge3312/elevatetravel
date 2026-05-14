@@ -1,0 +1,54 @@
+<div class="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4 relative overflow-hidden">
+  <!-- Background Effects -->
+  <div class="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-blue-900/20 blur-[120px] rounded-full pointer-events-none"></div>
+  <div class="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-purple-900/20 blur-[120px] rounded-full pointer-events-none"></div>
+
+  <!-- Back to Home Button -->
+  <a routerLink="/" class="absolute top-6 left-6 md:top-10 md:left-10 flex items-center gap-2 text-white/50 hover:text-white transition-colors text-xs font-medium uppercase tracking-widest z-20 bg-white/5 hover:bg-white/10 px-5 py-2.5 rounded-full border border-white/10 backdrop-blur-md">
+    <i class="pi pi-arrow-left"></i> Volver al Inicio
+  </a>
+
+  <div class="glass-panel w-full max-w-md p-10 rounded-2xl relative z-10">
+    <div class="text-center mb-10">
+      <img src="logo.png" alt="Elevate Travel MR" class="h-32 w-auto object-contain mx-auto mb-6">
+      <p class="text-white/50 tracking-wider text-sm uppercase">Backoffice Access</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+
+      @if(error) {
+        <div class="bg-red-500/10 border border-red-500/50 text-red-400 p-4 rounded-lg text-sm text-center">
+          {{ error }}
+        </div>
+      }
+
+      <div>
+        <label class="block text-xs uppercase tracking-widest text-white/50 mb-2">Email</label>
+        <input
+          type="email"
+          formControlName="email"
+          class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/20 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/30 transition-all"
+          placeholder="admin@elevatetravel.com"
+        >
+      </div>
+
+      <div>
+        <label class="block text-xs uppercase tracking-widest text-white/50 mb-2">Password</label>
+        <input
+          type="password"
+          formControlName="password"
+          class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/20 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/30 transition-all"
+          placeholder="••••••••"
+        >
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="loginForm.invalid || loading"
+        class="w-full bg-white text-black hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium uppercase tracking-widest text-sm py-4 rounded-lg transition-colors mt-8"
+      >
+        {{ loading ? 'Authenticating...' : 'Sign In' }}
+      </button>
+    </form>
+  </div>
+</div>
