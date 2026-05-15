@@ -1,8 +1,8 @@
-# Elevate Travel Platform ✈️🌍
+# Elevate Travel Platform 
 
-Bienvenido al repositorio oficial de la plataforma **Elevate Travel**, un sistema integral para agencias de viajes diseñado para ofrecer una experiencia visual premium (Dark Mode & Glassmorphism) tanto para los clientes como para los administradores.
+Bienvenido al repositorio oficial de la plataforma **Elevate Travel**
 
-## 🚀 Tecnologías Utilizadas
+##  Tecnologías Utilizadas
 
 Este proyecto es una aplicación Full-Stack estructurada en un monorepo, dividida en dos partes principales:
 
@@ -18,20 +18,6 @@ Este proyecto es una aplicación Full-Stack estructurada en un monorepo, dividid
 *   **PostgreSQL** (Motor de base de datos relacional)
 *   **JWT** (Autenticación y seguridad de rutas)
 
-## 🌟 Características Principales
-
-1.  **Vista Pública (Catálogo de Clientes):**
-    *   **Destinos:** Galería de países y ciudades disponibles.
-    *   **Paquetes:** Ofertas de viaje detalladas con itinerario y precios.
-    *   **Eventos:** Giras y eventos especiales organizados por la agencia.
-    *   **Visas:** Catálogo de asesorías para trámites de visado.
-    *   **Integración WhatsApp:** Botones flotantes y llamadas a la acción directas para que los clientes inicien el trámite o la compra vía WhatsApp con mensajes pre-formateados.
-
-2.  **Backoffice (Administración):**
-    *   Gestión CRUD completa (Crear, Leer, Actualizar, Eliminar) para todas las entidades (Destinos, Ofertas, Paquetes, Eventos, Visas).
-    *   Diseño Dark Mode editorial con componentes modernos.
-    *   Sistema seguro de inicio de sesión.
-    *   Autocompletado de países, manejo de URLs de imágenes y requerimientos en formato lista.
 
 ## ⚙️ Estructura del Proyecto
 
