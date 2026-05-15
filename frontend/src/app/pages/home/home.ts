@@ -4,6 +4,7 @@ import { RouterLink, Router } from '@angular/router';
 import { DestinationsService } from '../../core/services/destinations';
 import { PackagesService } from '../../core/services/packages';
 import { EventsService } from '../../core/services/events';
+import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
   selector: 'app-home',
@@ -28,6 +29,7 @@ export class Home implements OnInit {
   private destService = inject(DestinationsService);
   private pkgService = inject(PackagesService);
   private evtService = inject(EventsService);
+  public themeService = inject(ThemeService);
 
   destinations: any[] = [];
   packages: any[] = [];

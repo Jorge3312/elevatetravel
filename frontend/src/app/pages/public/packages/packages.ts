@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PackagesService } from '../../../core/services/packages';
 
+import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-public-packages',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './packages.html'
 })
 export class PublicPackages implements OnInit {
@@ -15,6 +17,16 @@ export class PublicPackages implements OnInit {
   private router = inject(Router);
 
   packages: any[] = [];
+  searchCountry: string = '';
+
+  get filteredPackages() {
+    if (!this.searchCountry) return this.packages;
+    return this.packages.filter(p => 
+      p.destination?.country?.toLowerCase().includes(this.searchCountry.toLowerCase()) ||
+      p.country?.toLowerCase().includes(this.searchCountry.toLowerCase())
+    );
+  }
+
   selectedItem: any = null;
 
   ngOnInit() {

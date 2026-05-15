@@ -1,4 +1,4 @@
-<section class="relative h-screen w-full flex overflow-hidden bg-black">
+<section class="relative h-screen w-full flex overflow-hidden" [ngClass]="themeService.isDark() ? 'bg-black' : 'bg-elevate-light'">
 
   <!-- Dynamic Backgrounds -->
   <div class="absolute inset-0 w-full h-full">
@@ -9,9 +9,11 @@
       <img [src]="dest.photo_url" [alt]="dest.city" class="w-full h-full object-cover">
     </div>
     <!-- Gradient Overlay -->
-    <div class="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-black/40 to-transparent z-10 pointer-events-none">
+    <div class="absolute inset-0 z-10 pointer-events-none"
+      [ngClass]="themeService.isDark() ? 'bg-gradient-to-r from-[#0a0a0a] via-black/40 to-transparent' : 'bg-gradient-to-r from-elevate-light via-elevate-light/40 to-transparent'">
     </div>
-    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 z-10 pointer-events-none">
+    <div class="absolute inset-0 z-10 pointer-events-none"
+      [ngClass]="themeService.isDark() ? 'bg-gradient-to-t from-black/60 via-transparent to-black/20' : 'bg-gradient-to-t from-elevate-light/60 via-transparent to-elevate-light/20'">
     </div>
   </div>
 
@@ -29,19 +31,21 @@
 
         <!-- Subtitle -->
         <div class="flex items-center gap-4 mb-5">
-          <div class="w-8 h-[2px] bg-white"></div>
-          <span class="text-white text-sm font-medium tracking-widest uppercase">{{ dest.city }} - {{ dest.country }}</span>
+          <div class="w-8 h-[2px]" [ngClass]="themeService.isDark() ? 'bg-white' : 'bg-zinc-900'"></div>
+          <span class="text-sm font-medium tracking-widest uppercase" [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'">{{ dest.city }} - {{ dest.country }}</span>
         </div>
 
         <!-- Giant Title -->
         <h1
-          class="text-white text-7xl md:text-[6rem] lg:text-[7rem] font-black uppercase font-display leading-[0.85] tracking-tighter mb-8 drop-shadow-xl"
-          style="text-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+          class="text-7xl md:text-[6rem] lg:text-[7rem] font-black uppercase font-display leading-[0.85] tracking-tighter mb-8 drop-shadow-xl"
+          [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'"
+          [style.text-shadow]="themeService.isDark() ? '0 10px 30px rgba(0,0,0,0.3)' : 'none'">
           {{ dest.title || dest.city }}
         </h1>
 
         <!-- Description -->
-        <p class="text-white/80 max-w-lg text-sm leading-relaxed mb-10 line-clamp-3 font-light">
+        <p class="max-w-lg text-sm leading-relaxed mb-10 line-clamp-3 font-light"
+          [ngClass]="themeService.isDark() ? 'text-white/80' : 'text-zinc-900/80'">
           {{ dest.description || 'Descubre una experiencia inolvidable en ' + dest.city + '. Sumérgete en la cultura, explora paisajes impresionantes y crea recuerdos que durarán toda la vida. Elevate Travel te lleva más allá.' }}
         </p>
 
@@ -49,7 +53,8 @@
         <div class="flex items-center gap-6">
           <!-- WhatsApp Contact Button -->
           <a href="https://wa.me/1234567890?text=Hola, estoy interesado en viajar a {{ dest.city }}" target="_blank"
-            class="group flex items-center gap-3 px-8 py-4 rounded-full border-2 border-white/40 hover:border-[#25D366] text-white transition-all duration-300 backdrop-blur-sm bg-black/10 hover:bg-[#25D366]/10">
+            class="group flex items-center gap-3 px-8 py-4 rounded-full border-2 transition-all duration-300 backdrop-blur-sm"
+            [ngClass]="themeService.isDark() ? 'border-white/40 text-white bg-black/10 hover:bg-[#25D366]/10 hover:border-[#25D366]' : 'border-zinc-900/40 text-zinc-900 bg-white/10 hover:bg-[#25D366]/10 hover:border-[#25D366]'">
             <span class="text-xs font-bold tracking-widest uppercase group-hover:text-[#25D366] transition-colors">Contáctanos vía WhatsApp</span>
             <i class="pi pi-whatsapp text-lg group-hover:text-[#25D366] transition-colors"></i>
           </a>
@@ -66,8 +71,11 @@
           [style.transform]="'translateX(-' + (activeDestIndex * 280) + 'px)'">
 
           <div *ngFor="let dest of destinations; let i = index"
-            class="min-w-[240px] w-[240px] h-[340px] rounded-[1.5rem] overflow-hidden relative cursor-pointer group shadow-2xl transition-all duration-700 ease-in-out border border-white/10"
-            [ngClass]="i === activeDestIndex ? 'opacity-0 scale-90 translate-y-10 pointer-events-none' : 'opacity-100 scale-100 hover:-translate-y-3'"
+            class="min-w-[240px] w-[240px] h-[340px] rounded-[1.5rem] overflow-hidden relative cursor-pointer group shadow-2xl transition-all duration-700 ease-in-out"
+            [ngClass]="[
+              i === activeDestIndex ? 'opacity-0 scale-90 translate-y-10 pointer-events-none' : 'opacity-100 scale-100 hover:-translate-y-3',
+              themeService.isDark() ? 'border border-white/10' : 'border border-zinc-200 bg-white'
+            ]"
             (click)="goToDest(i, $event)">
 
             <img [src]="dest.photo_url"
@@ -93,22 +101,24 @@
         <!-- Arrows -->
         <div class="flex items-center gap-4">
           <button (click)="prevDest()"
-            class="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all backdrop-blur-sm group">
+            class="w-12 h-12 rounded-full border flex items-center justify-center transition-all backdrop-blur-sm group"
+            [ngClass]="themeService.isDark() ? 'border-white/30 text-white hover:bg-white hover:text-black' : 'border-zinc-900/30 text-zinc-900 hover:bg-zinc-900 hover:text-white'">
             <i class="pi pi-angle-left text-xl group-hover:-translate-x-0.5 transition-transform"></i>
           </button>
           <button (click)="nextDest()"
-            class="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all backdrop-blur-sm group">
+            class="w-12 h-12 rounded-full border flex items-center justify-center transition-all backdrop-blur-sm group"
+            [ngClass]="themeService.isDark() ? 'border-white/30 text-white hover:bg-white hover:text-black' : 'border-zinc-900/30 text-zinc-900 hover:bg-zinc-900 hover:text-white'">
             <i class="pi pi-angle-right text-xl group-hover:translate-x-0.5 transition-transform"></i>
           </button>
         </div>
 
         <!-- Progress Indicator -->
         <div class="flex items-center gap-6">
-          <div class="w-48 h-[2px] bg-white/20 relative overflow-hidden">
+          <div class="w-48 h-[2px] relative overflow-hidden" [ngClass]="themeService.isDark() ? 'bg-white/20' : 'bg-zinc-900/20'">
             <div class="absolute top-0 left-0 h-full bg-amber-400 transition-all duration-500 ease-out"
               [style.width]="((activeDestIndex + 1) / (destinations.length || 1) * 100) + '%'"></div>
           </div>
-          <div class="text-5xl font-display font-bold text-white tracking-tighter">
+          <div class="text-5xl font-display font-bold tracking-tighter" [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'">
             {{ (activeDestIndex + 1).toString().padStart(2, '0') }}
           </div>
         </div>
@@ -124,8 +134,10 @@
 <!-- ═══════════════════════════════════════════
      DESTINOS
 ═══════════════════════════════════════════ -->
-<section id="destinations" class="relative py-32 overflow-hidden"
-  style="background-color: #050505; background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px); background-size: 50px 50px;">
+<section id="destinations" class="relative py-32 overflow-hidden transition-colors duration-500"
+  [ngClass]="themeService.isDark() ? 'bg-[#050505]' : 'bg-elevate-light'"
+  [style.background-image]="themeService.isDark() ? 'linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)' : 'linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px)'"
+  [style.background-size]="'50px 50px'">
 
   <!-- Floating Elements -->
   <div class="absolute top-20 left-10 text-white/5 animate-bounce-slow">
@@ -136,10 +148,10 @@
   </div>
 
   <div class="max-w-7xl mx-auto px-6 mb-16 relative z-10 text-center">
-    <span class="text-xs tracking-[0.3em] uppercase text-amber-400 mb-4 block">Explora el mundo</span>
-    <h2 class="text-4xl md:text-6xl font-display font-bold uppercase tracking-tight text-white">Destinos Imperdibles
+    <span class="text-xs tracking-[0.3em] uppercase text-amber-500 mb-4 block">Explora el mundo</span>
+    <h2 class="text-4xl md:text-6xl font-display font-bold uppercase tracking-tight" [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'">Destinos Imperdibles
     </h2>
-    <p class="text-white/40 mt-4 max-w-2xl mx-auto font-light text-lg">Asegúrate de probar nuestra selección de
+    <p class="mt-4 max-w-2xl mx-auto font-light text-lg" [ngClass]="themeService.isDark() ? 'text-white/40' : 'text-zinc-900/40'">Asegúrate de probar nuestra selección de
       destinos, los hemos elegido cuidadosamente para ti.</p>
   </div>
 
@@ -153,7 +165,8 @@
     class="relative w-full h-[450px] sm:h-[500px] flex items-center justify-center [perspective:1500px]">
 
     <div *ngFor="let dest of destinations; let i = index"
-      class="absolute w-[280px] sm:w-[320px] md:w-[380px] h-[400px] sm:h-[450px] rounded-[2rem] overflow-hidden shadow-2xl cursor-pointer"
+      class="absolute w-[280px] sm:w-[320px] md:w-[380px] h-[400px] sm:h-[450px] rounded-[2rem] overflow-hidden cursor-pointer"
+      [ngClass]="themeService.isDark() ? 'shadow-2xl' : 'shadow-xl bg-white border border-zinc-100'"
       [ngStyle]="getDestCardStyle(i)" (click)="goToDest(i, $event)">
       <img *ngIf="dest.photo_url" [src]="dest.photo_url" [alt]="dest.city" class="w-full h-full object-cover" />
       <div *ngIf="!dest.photo_url" class="w-full h-full bg-zinc-800"></div>
@@ -165,13 +178,13 @@
 
       <!-- Info Content -->
       <div class="absolute bottom-0 left-0 p-8 w-full pointer-events-none">
-        <span class="text-[10px] tracking-widest uppercase text-amber-400 font-medium block mb-2">{{ dest.city }}</span>
+        <span class="text-[10px] tracking-widest uppercase text-amber-500 font-medium block mb-2">{{ dest.city }}</span>
         <h3 class="text-4xl font-display font-bold text-white leading-none tracking-tight">{{ dest.country }}</h3>
 
         <!-- Hover / Active effect extra info -->
         <div class="mt-6 flex gap-4 pointer-events-auto" *ngIf="activeDestIndex === i">
           <a [routerLink]="['/destinations']" [queryParams]="{id: dest.id}" (click)="$event.stopPropagation()"
-            class="bg-amber-400 text-black px-6 py-3 rounded-full text-xs font-medium tracking-widest uppercase hover:bg-white transition-colors">
+            class="bg-amber-500 text-black px-6 py-3 rounded-full text-xs font-medium tracking-widest uppercase hover:bg-zinc-900 hover:text-white transition-colors">
             Ver destino
           </a>
         </div>
@@ -209,10 +222,12 @@
 <!-- ═══════════════════════════════════════════
      PAQUETES
 ═══════════════════════════════════════════ -->
-<section id="packages" class="py-24 bg-[#050505] relative overflow-hidden">
+<section id="packages" class="py-24 relative overflow-hidden transition-colors duration-500"
+  [ngClass]="themeService.isDark() ? 'bg-[#050505]' : 'bg-elevate-light'">
   <!-- Background Grid & Icons -->
   <div class="absolute inset-0 pointer-events-none opacity-20"
-    style="background-image: linear-gradient(#ffffff11 1px, transparent 1px), linear-gradient(90deg, #ffffff11 1px, transparent 1px); background-size: 80px 80px;">
+    [style.background-image]="themeService.isDark() ? 'linear-gradient(#ffffff11 1px, transparent 1px), linear-gradient(90deg, #ffffff11 1px, transparent 1px)' : 'linear-gradient(#00000011 1px, transparent 1px), linear-gradient(90deg, #00000011 1px, transparent 1px)'"
+    [style.background-size]="'80px 80px'">
   </div>
   <div class="absolute top-20 left-20 text-white/5 animate-bounce-slow">
     <i class="pi pi-briefcase text-6xl"></i>
@@ -222,9 +237,9 @@
   </div>
 
   <div class="max-w-7xl mx-auto px-6 mb-16 relative z-10 text-center">
-    <span class="text-xs tracking-[0.3em] uppercase text-amber-400 mb-4 block">Todo incluido</span>
-    <h2 class="text-4xl md:text-6xl font-display font-bold uppercase tracking-tight text-white">Paquetes Turísticos</h2>
-    <p class="text-white/40 mt-4 max-w-2xl mx-auto font-light text-lg">Disfruta de la mejor experiencia con nuestros paquetes diseñados para tu comodidad.</p>
+    <span class="text-xs tracking-[0.3em] uppercase text-amber-500 mb-4 block">Todo incluido</span>
+    <h2 class="text-4xl md:text-6xl font-display font-bold uppercase tracking-tight" [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'">Paquetes Turísticos</h2>
+    <p class="mt-4 max-w-2xl mx-auto font-light text-lg" [ngClass]="themeService.isDark() ? 'text-white/40' : 'text-zinc-900/40'">Disfruta de la mejor experiencia con nuestros paquetes diseñados para tu comodidad.</p>
   </div>
 
   <!-- Loading -->
@@ -237,7 +252,8 @@
     class="relative w-full h-[450px] sm:h-[500px] flex items-center justify-center [perspective:1500px]">
 
     <div *ngFor="let pkg of packages; let i = index"
-      class="absolute w-[280px] sm:w-[320px] md:w-[380px] h-[400px] sm:h-[450px] rounded-[2rem] overflow-hidden shadow-2xl cursor-pointer"
+      class="absolute w-[280px] sm:w-[320px] md:w-[380px] h-[400px] sm:h-[450px] rounded-[2rem] overflow-hidden cursor-pointer"
+      [ngClass]="themeService.isDark() ? 'shadow-2xl' : 'shadow-xl bg-white border border-zinc-100'"
       [ngStyle]="getPkgCardStyle(i)" (click)="goToPkg(i, $event)">
       <img *ngIf="pkg.photo_url" [src]="pkg.photo_url" [alt]="pkg.name" class="w-full h-full object-cover" />
       <div *ngIf="!pkg.photo_url" class="w-full h-full bg-zinc-800"></div>
@@ -253,7 +269,7 @@
         <!-- Hover / Active effect extra info -->
         <div class="mt-6 flex gap-4 pointer-events-auto" *ngIf="activePkgIndex === i">
           <a [routerLink]="['/packages']" [queryParams]="{id: pkg.id}" (click)="$event.stopPropagation()"
-            class="bg-amber-400 text-black px-6 py-3 rounded-full text-xs font-medium tracking-widest uppercase hover:bg-white transition-colors">
+            class="bg-amber-500 text-zinc-900 px-6 py-3 rounded-full text-xs font-medium tracking-widest uppercase hover:bg-zinc-900 hover:text-white transition-colors">
             Ver paquete
           </a>
         </div>
@@ -290,10 +306,12 @@
 <!-- ═══════════════════════════════════════════
      EVENTOS
 ═══════════════════════════════════════════ -->
-<section id="events" class="py-24 bg-[#050505] relative overflow-hidden">
+<section id="events" class="py-24 relative overflow-hidden transition-colors duration-500"
+  [ngClass]="themeService.isDark() ? 'bg-[#050505]' : 'bg-elevate-light'">
   <!-- Background Grid & Icons -->
   <div class="absolute inset-0 pointer-events-none opacity-20"
-    style="background-image: linear-gradient(#ffffff11 1px, transparent 1px), linear-gradient(90deg, #ffffff11 1px, transparent 1px); background-size: 80px 80px;">
+    [style.background-image]="themeService.isDark() ? 'linear-gradient(#ffffff11 1px, transparent 1px), linear-gradient(90deg, #ffffff11 1px, transparent 1px)' : 'linear-gradient(#00000011 1px, transparent 1px), linear-gradient(90deg, #00000011 1px, transparent 1px)'"
+    [style.background-size]="'80px 80px'">
   </div>
   <div class="absolute top-20 right-20 text-white/5 animate-bounce-slow">
     <i class="pi pi-star text-6xl"></i>
@@ -303,9 +321,9 @@
   </div>
 
   <div class="max-w-7xl mx-auto px-6 mb-16 relative z-10 text-center">
-    <span class="text-xs tracking-[0.3em] uppercase text-amber-400 mb-4 block">Experiencias únicas</span>
-    <h2 class="text-4xl md:text-6xl font-display font-bold uppercase tracking-tight text-white">Eventos Especiales</h2>
-    <p class="text-white/40 mt-4 max-w-2xl mx-auto font-light text-lg">Momentos irrepetibles en los lugares más increíbles del planeta.</p>
+    <span class="text-xs tracking-[0.3em] uppercase text-amber-500 mb-4 block">Experiencias únicas</span>
+    <h2 class="text-4xl md:text-6xl font-display font-bold uppercase tracking-tight" [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'">Eventos Especiales</h2>
+    <p class="mt-4 max-w-2xl mx-auto font-light text-lg" [ngClass]="themeService.isDark() ? 'text-white/40' : 'text-zinc-900/40'">Momentos irrepetibles en los lugares más increíbles del planeta.</p>
   </div>
 
   <!-- Loading -->
@@ -318,7 +336,8 @@
     class="relative w-full h-[450px] sm:h-[500px] flex items-center justify-center [perspective:1500px]">
 
     <div *ngFor="let evt of events; let i = index"
-      class="absolute w-[280px] sm:w-[320px] md:w-[380px] h-[400px] sm:h-[450px] rounded-[2rem] overflow-hidden shadow-2xl cursor-pointer"
+      class="absolute w-[280px] sm:w-[320px] md:w-[380px] h-[400px] sm:h-[450px] rounded-[2rem] overflow-hidden cursor-pointer"
+      [ngClass]="themeService.isDark() ? 'shadow-2xl' : 'shadow-xl bg-white border border-zinc-100'"
       [ngStyle]="getEvtCardStyle(i)" (click)="goToEvt(i, $event)">
       <img *ngIf="evt.photo_url" [src]="evt.photo_url" [alt]="evt.name" class="w-full h-full object-cover" />
       <div *ngIf="!evt.photo_url" class="w-full h-full bg-zinc-800"></div>
@@ -334,7 +353,7 @@
         <!-- Hover / Active effect extra info -->
         <div class="mt-6 flex gap-4 pointer-events-auto" *ngIf="activeEvtIndex === i">
           <a [routerLink]="['/events']" [queryParams]="{id: evt.id}" (click)="$event.stopPropagation()"
-            class="bg-amber-400 text-black px-6 py-3 rounded-full text-xs font-medium tracking-widest uppercase hover:bg-white transition-colors">
+            class="bg-amber-500 text-zinc-900 px-6 py-3 rounded-full text-xs font-medium tracking-widest uppercase hover:bg-zinc-900 hover:text-white transition-colors">
             Ver evento
           </a>
         </div>
@@ -371,13 +390,14 @@
 <!-- ═══════════════════════════════════════════
      CTA FINAL
 ═══════════════════════════════════════════ -->
-<section id="visas" class="relative py-32 overflow-hidden bg-white dark:bg-black">
+<section id="visas" class="relative py-32 overflow-hidden transition-colors duration-500"
+  [ngClass]="themeService.isDark() ? 'bg-black' : 'bg-elevate-light'">
   <div class="absolute inset-0 opacity-20"
     style="background-image: radial-gradient(ellipse at 20% 50%, rgba(251,191,36,0.3) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(251,191,36,0.15) 0%, transparent 60%)">
   </div>
   <div class="relative z-10 max-w-3xl mx-auto px-6 text-center">
     <p class="text-xs tracking-[0.4em] uppercase text-amber-400 mb-6">Planifica tu próxima aventura</p>
-    <h2 class="text-5xl md:text-7xl font-display font-bold uppercase leading-[0.9] tracking-tighter mb-10">
+    <h2 class="text-5xl md:text-7xl font-display font-bold uppercase leading-[0.9] tracking-tighter mb-10" [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'">
       Viaja.<br />Explora.<br />Inspírate.
     </h2>
     <p class="text-zinc-900 dark:text-white/40 text-sm leading-relaxed max-w-md mx-auto mb-12">

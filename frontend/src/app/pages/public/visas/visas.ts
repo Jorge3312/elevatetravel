@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { VisasService } from '../../../core/services/visas';
 
+import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-public-visas',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './visas.html'
 })
 export class PublicVisas implements OnInit {
@@ -15,6 +17,15 @@ export class PublicVisas implements OnInit {
   private router = inject(Router);
 
   visas: any[] = [];
+  searchCountry: string = '';
+
+  get filteredVisas() {
+    if (!this.searchCountry) return this.visas;
+    return this.visas.filter(v => 
+      v.country?.toLowerCase().includes(this.searchCountry.toLowerCase())
+    );
+  }
+
   selectedItem: any = null;
 
   ngOnInit() {

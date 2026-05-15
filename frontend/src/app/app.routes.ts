@@ -22,7 +22,8 @@ export const routes: Routes = [
       { path: 'destinations', loadComponent: () => import('./pages/public/destinations/destinations').then(m => m.PublicDestinations) },
       { path: 'packages', loadComponent: () => import('./pages/public/packages/packages').then(m => m.PublicPackages) },
       { path: 'events', loadComponent: () => import('./pages/public/events/events').then(m => m.PublicEvents) },
-      { path: 'visas', loadComponent: () => import('./pages/public/visas/visas').then(m => m.PublicVisas) }
+      { path: 'visas', loadComponent: () => import('./pages/public/visas/visas').then(m => m.PublicVisas) },
+      { path: 'privacy-policy', loadComponent: () => import('./pages/public/privacy-policy/privacy-policy').then(m => m.PrivacyPolicy) }
     ]
   },
   {

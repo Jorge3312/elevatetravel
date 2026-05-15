@@ -6,10 +6,12 @@ import { EventsService } from '../../../core/services/events';
 import { PackagesService } from '../../../core/services/packages';
 import { forkJoin } from 'rxjs';
 
+import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-public-destinations',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './destinations.html'
 })
 export class PublicDestinations implements OnInit {
@@ -23,6 +25,15 @@ export class PublicDestinations implements OnInit {
   events: any[] = [];
   packages: any[] = [];
   
+  searchCountry: string = '';
+
+  get filteredDestinations() {
+    if (!this.searchCountry) return this.destinations;
+    return this.destinations.filter(d => 
+      d.country?.toLowerCase().includes(this.searchCountry.toLowerCase())
+    );
+  }
+
   selectedDestination: any = null;
   destEvents: any[] = [];
   destPackages: any[] = [];

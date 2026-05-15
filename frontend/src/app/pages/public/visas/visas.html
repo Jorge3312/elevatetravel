@@ -2,11 +2,23 @@
 <div class="pt-32 pb-20 px-6 max-w-7xl mx-auto min-h-screen">
   <div class="mb-16">
     <span class="text-zinc-900 dark:text-white/50 text-xs tracking-[0.3em] uppercase mb-4 block">Trámites</span>
-    <h1 class="text-4xl md:text-6xl font-light tracking-tight">Visas</h1>
+    <h1 class="text-4xl md:text-6xl font-light tracking-tight mb-8">Visas</h1>
+
+    <!-- Filter Bar -->
+    <div class="glass-panel p-4 md:p-6 rounded-2xl flex flex-wrap gap-6 items-end max-w-2xl">
+      <div class="flex-1 min-w-[200px]">
+        <label class="text-[10px] tracking-widest uppercase text-zinc-900 dark:text-white/40 mb-3 block">Filtrar por País</label>
+        <div class="relative">
+          <i class="pi pi-search absolute left-4 top-1/2 -translate-y-1/2 text-zinc-900 dark:text-white/30 text-xs"></i>
+          <input type="text" [(ngModel)]="searchCountry" placeholder="Ej. China, Rusia..." 
+            class="w-full bg-black/5 dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-amber-500/50 transition-all placeholder:text-zinc-400 dark:placeholder:text-white/20">
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-    @for (visa of visas; track visa.id) {
+    @for (visa of filteredVisas; track visa.id) {
       <div class="glass-panel rounded-2xl overflow-hidden cursor-pointer group" (click)="showDetails(visa)">
         <div class="h-48 relative overflow-hidden flex items-center justify-center bg-white dark:bg-black/5 dark:bg-white/5">
           <img *ngIf="visa.photo_url" [src]="visa.photo_url" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Visa">

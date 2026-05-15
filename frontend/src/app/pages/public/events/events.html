@@ -2,11 +2,41 @@
 <div class="pt-32 pb-20 px-6 max-w-7xl mx-auto min-h-screen">
   <div class="mb-16">
     <span class="text-zinc-900 dark:text-white/50 text-xs tracking-[0.3em] uppercase mb-4 block">Experiencias</span>
-    <h1 class="text-4xl md:text-6xl font-light tracking-tight">Eventos</h1>
+    <h1 class="text-4xl md:text-6xl font-light tracking-tight mb-8">Eventos</h1>
+
+    <!-- Filter Bar -->
+    <div class="glass-panel p-4 md:p-6 rounded-2xl flex flex-wrap gap-6 items-end">
+      <div class="flex-1 min-w-[200px]">
+        <label class="text-[10px] tracking-widest uppercase text-zinc-900 dark:text-white/40 mb-3 block">Filtrar por País</label>
+        <div class="relative">
+          <i class="pi pi-search absolute left-4 top-1/2 -translate-y-1/2 text-zinc-900 dark:text-white/30 text-xs"></i>
+          <input type="text" [(ngModel)]="searchCountry" placeholder="Ej. Brasil, USA..." 
+            class="w-full bg-black/5 dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-amber-500/50 transition-all placeholder:text-zinc-400 dark:placeholder:text-white/20">
+        </div>
+      </div>
+      <div class="w-full md:w-auto flex flex-wrap md:flex-nowrap gap-6">
+        <div class="w-full md:w-48">
+          <label class="text-[10px] tracking-widest uppercase text-zinc-900 dark:text-white/40 mb-3 block">Fecha Inicio</label>
+          <div class="relative">
+            <i class="pi pi-calendar absolute left-4 top-1/2 -translate-y-1/2 text-zinc-900 dark:text-white/30 text-xs"></i>
+            <input type="date" [(ngModel)]="startDate" 
+              class="w-full bg-black/5 dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-amber-500/50 transition-all text-zinc-900 dark:text-white/70">
+          </div>
+        </div>
+        <div class="w-full md:w-48">
+          <label class="text-[10px] tracking-widest uppercase text-zinc-900 dark:text-white/40 mb-3 block">Fecha Fin</label>
+          <div class="relative">
+            <i class="pi pi-calendar absolute left-4 top-1/2 -translate-y-1/2 text-zinc-900 dark:text-white/30 text-xs"></i>
+            <input type="date" [(ngModel)]="endDate" 
+              class="w-full bg-black/5 dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-amber-500/50 transition-all text-zinc-900 dark:text-white/70">
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-    @for (evt of events; track evt.id) {
+    @for (evt of filteredEvents; track evt.id) {
       <div class="glass-panel rounded-2xl overflow-hidden cursor-pointer group" (click)="showDetails(evt)">
         <div class="h-64 relative overflow-hidden">
           <img [src]="evt.photo_url || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop'" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">

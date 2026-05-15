@@ -1,14 +1,17 @@
-<div class="min-h-screen bg-gray-50 dark:bg-[#0f0f0f] text-zinc-900 dark:text-white flex flex-col">
+<div class="min-h-screen bg-elevate-light dark:bg-[#0f0f0f] text-zinc-900 dark:text-white flex flex-col">
 
   <!-- Navbar -->
-  <nav class="fixed top-0 left-0 w-full z-50 transition-all duration-500"
-    [ngClass]="scrolled ? 'bg-white dark:bg-black shadow-lg border-b border-zinc-200 dark:border-white/10' : ''">
-    <div class="max-w-[1800px] mx-auto px-8 h-20 flex items-center justify-between w-full">
+  <nav class="fixed top-0 left-0 w-full z-50 transition-all duration-500 border-b border-transparent" [ngClass]="{
+      'bg-elevate-light border-zinc-200 shadow-sm': !themeService.isDark() && scrolled,
+      'bg-black/80 backdrop-blur-md border-white/10 shadow-lg': themeService.isDark() && scrolled,
+      'bg-transparent': !scrolled
+    }">
+    <div class="max-w-[1800px] mx-auto px-8 h-24 flex items-center justify-between w-full">
       <!-- Left Section: Logo -->
       <div class="flex items-center gap-4 w-1/4">
         <a routerLink="/" class="flex items-center group py-2">
-          <img src="logo.png" alt="Elevate Travel MR"
-            class="h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105">
+          <img [src]="themeService.isDark() ? 'logo.png' : 'logodia.png'" alt="Elevate Travel MR"
+            class="h-20 w-auto object-contain transition-transform duration-300 group-hover:scale-105">
         </a>
       </div>
 
@@ -16,25 +19,25 @@
       <div class="hidden md:flex items-center justify-center gap-10 w-2/4">
         <a routerLink="/destinations"
           class="text-xs tracking-widest font-bold uppercase transition-colors relative group"
-          [ngClass]="(isHome && !scrolled) ? 'text-white hover:text-amber-400' : 'text-zinc-900 dark:text-white/80 hover:text-amber-500'">
+          [ngClass]="themeService.isDark() ? ((isHome && !scrolled) ? 'text-white hover:text-amber-400' : 'text-white/80 hover:text-amber-500') : 'text-zinc-900 hover:text-amber-600'">
           DESTINOS
           <span
             class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-amber-400 group-hover:w-full transition-all duration-300"></span>
         </a>
         <a routerLink="/packages" class="text-xs tracking-widest font-bold uppercase transition-colors relative group"
-          [ngClass]="(isHome && !scrolled) ? 'text-white hover:text-amber-400' : 'text-zinc-900 dark:text-white/80 hover:text-amber-500'">
+          [ngClass]="themeService.isDark() ? ((isHome && !scrolled) ? 'text-white hover:text-amber-400' : 'text-white/80 hover:text-amber-500') : 'text-zinc-900 hover:text-amber-600'">
           PAQUETES
           <span
             class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-amber-400 group-hover:w-full transition-all duration-300"></span>
         </a>
         <a routerLink="/events" class="text-xs tracking-widest font-bold uppercase transition-colors relative group"
-          [ngClass]="(isHome && !scrolled) ? 'text-white hover:text-amber-400' : 'text-zinc-900 dark:text-white/80 hover:text-amber-500'">
+          [ngClass]="themeService.isDark() ? ((isHome && !scrolled) ? 'text-white hover:text-amber-400' : 'text-white/80 hover:text-amber-500') : 'text-zinc-900 hover:text-amber-600'">
           EVENTOS
           <span
             class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-amber-400 group-hover:w-full transition-all duration-300"></span>
         </a>
         <a routerLink="/visas" class="text-xs tracking-widest font-bold uppercase transition-colors relative group"
-          [ngClass]="(isHome && !scrolled) ? 'text-white hover:text-amber-400' : 'text-zinc-900 dark:text-white/80 hover:text-amber-500'">
+          [ngClass]="themeService.isDark() ? ((isHome && !scrolled) ? 'text-white hover:text-amber-400' : 'text-white/80 hover:text-amber-500') : 'text-zinc-900 hover:text-amber-600'">
           VISAS
           <span
             class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-amber-400 group-hover:w-full transition-all duration-300"></span>
@@ -45,18 +48,18 @@
       <div class="hidden md:flex items-center justify-end gap-6 w-1/4">
         <!-- WhatsApp Icon -->
         <a href="https://wa.me/1234567890" target="_blank" class="transition-colors hover:scale-110"
-          [ngClass]="(isHome && !scrolled) ? 'text-white hover:text-[#25D366]' : 'text-zinc-900 dark:text-white/80 hover:text-[#25D366]'">
+          [ngClass]="themeService.isDark() ? ((isHome && !scrolled) ? 'text-white hover:text-[#25D366]' : 'text-white/80 hover:text-[#25D366]') : 'text-zinc-900 hover:text-[#25D366]'">
           <i class="pi pi-whatsapp text-lg"></i>
         </a>
         <!-- Theme Toggle -->
-        <button (click)="themeService.toggleTheme()" class="transition-colors hover:text-amber-400"
-          [ngClass]="(isHome && !scrolled) ? 'text-white' : 'text-zinc-900 dark:text-white'">
+        <button (click)="themeService.toggleTheme()" class="transition-colors hover:text-amber-500"
+          [ngClass]="themeService.isDark() ? ((isHome && !scrolled) ? 'text-white' : 'text-white') : 'text-zinc-900'">
           <i class="pi text-lg" [ngClass]="themeService.isDark() ? 'pi-sun' : 'pi-moon'"></i>
         </button>
 
         <a routerLink="/login"
           class="flex items-center gap-2 text-xs border px-6 py-2 rounded-full transition-all duration-300 font-bold tracking-widest uppercase"
-          [ngClass]="(isHome && !scrolled) ? 'text-white border-white/40 hover:bg-white/10' : 'text-zinc-900 dark:text-white border-zinc-300 dark:border-white/20 hover:bg-zinc-100 dark:hover:bg-white/5'">
+          [ngClass]="themeService.isDark() ? ((isHome && !scrolled) ? 'text-white border-white/40 hover:bg-white/10' : 'text-white border-white/20 hover:bg-white/5') : 'text-zinc-900 border-zinc-300 hover:bg-zinc-100'">
           Admin
         </a>
       </div>
@@ -70,7 +73,7 @@
 
     <!-- Mobile menu -->
     <div
-      class="md:hidden overflow-hidden transition-all duration-300 bg-white dark:bg-black border-t border-zinc-200 dark:border-white/10"
+      class="md:hidden overflow-hidden transition-all duration-300 bg-elevate-light dark:bg-black border-t border-zinc-200 dark:border-white/10"
       [class.max-h-0]="!menuOpen" [class.max-h-96]="menuOpen">
       <div class="px-6 py-6 flex flex-col gap-5">
         <a routerLink="/destinations" class="text-xs tracking-widest uppercase text-zinc-900 dark:text-white/70"
@@ -99,11 +102,12 @@
   </a>
 
   <!-- Footer -->
-  <footer class="bg-white dark:bg-black border-t border-zinc-200 dark:border-white/10 py-16">
+  <footer class="bg-elevate-light dark:bg-black border-t border-zinc-200 dark:border-white/10 py-16">
     <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
       <div class="md:col-span-2">
         <div class="flex items-center gap-3 mb-6">
-          <img src="logo.png" alt="Elevate Travel MR" class="h-28 w-auto object-contain">
+          <img [src]="themeService.isDark() ? 'logo.png' : 'logodia.png'" alt="Elevate Travel MR"
+            class="h-28 w-auto object-contain">
         </div>
         <p class="text-zinc-900 dark:text-white/40 font-light max-w-xs leading-relaxed text-sm">
           Experiencias de viaje exclusivas, diseñadas para quienes exigen lo mejor del mundo.
@@ -116,6 +120,7 @@
           </li>
           <li><a routerLink="/packages" class="hover:text-zinc-900 dark:text-white transition-colors">Paquetes</a></li>
           <li><a routerLink="/events" class="hover:text-zinc-900 dark:text-white transition-colors">Eventos</a></li>
+          <li><a routerLink="/privacy-policy" class="hover:text-zinc-900 dark:text-white transition-colors">Políticas de Privacidad</a></li>
         </ul>
       </div>
       <div>
