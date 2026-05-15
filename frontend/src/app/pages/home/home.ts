@@ -72,9 +72,23 @@ export class Home implements OnInit {
 
   // Carousel Logic
   activeDestIndex = 0;
+  activePkgIndex = 0;
+  activeEvtIndex = 0;
 
   getDestCardStyle(index: number) {
-    const diff = index - this.activeDestIndex;
+    return this.getGenericCardStyle(index, this.activeDestIndex);
+  }
+
+  getPkgCardStyle(index: number) {
+    return this.getGenericCardStyle(index, this.activePkgIndex);
+  }
+
+  getEvtCardStyle(index: number) {
+    return this.getGenericCardStyle(index, this.activeEvtIndex);
+  }
+
+  private getGenericCardStyle(index: number, activeIndex: number) {
+    const diff = index - activeIndex;
     let translateX = 0;
     let scale = 1;
     let rotateY = 0;
@@ -145,26 +159,56 @@ export class Home implements OnInit {
   private router = inject(Router);
 
   goToDest(index: number, event: Event) {
-    // If not active, prevent default click and just slide to it
     if (this.activeDestIndex !== index) {
       event.preventDefault();
       event.stopPropagation();
       this.activeDestIndex = index;
     } else {
-      // If it is active, clicking anywhere on the card navigates
       this.router.navigate(['/destinations'], { queryParams: { id: this.destinations[index].id } });
     }
   }
 
-  nextDest() {
-    if (this.activeDestIndex < this.destinations.length - 1) {
-      this.activeDestIndex++;
+  goToPkg(index: number, event: Event) {
+    if (this.activePkgIndex !== index) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.activePkgIndex = index;
+    } else {
+      this.router.navigate(['/packages'], { queryParams: { id: this.packages[index].id } });
     }
   }
 
-  prevDest() {
-    if (this.activeDestIndex > 0) {
-      this.activeDestIndex--;
+  goToEvt(index: number, event: Event) {
+    if (this.activeEvtIndex !== index) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.activeEvtIndex = index;
+    } else {
+      this.router.navigate(['/events'], { queryParams: { id: this.events[index].id } });
     }
+  }
+
+  nextDest() {
+    if (this.activeDestIndex < this.destinations.length - 1) this.activeDestIndex++;
+  }
+
+  prevDest() {
+    if (this.activeDestIndex > 0) this.activeDestIndex--;
+  }
+
+  nextPkg() {
+    if (this.activePkgIndex < this.packages.length - 1) this.activePkgIndex++;
+  }
+
+  prevPkg() {
+    if (this.activePkgIndex > 0) this.activePkgIndex--;
+  }
+
+  nextEvt() {
+    if (this.activeEvtIndex < this.events.length - 1) this.activeEvtIndex++;
+  }
+
+  prevEvt() {
+    if (this.activeEvtIndex > 0) this.activeEvtIndex--;
   }
 }
