@@ -61,6 +61,15 @@ export class Home implements OnInit {
     });
   }
 
+  scrollToDestinations() {
+    const el = document.getElementById('tour-catalog');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+    }
+  }
+
   // Carousel Logic
   activeDestIndex = 0;
 

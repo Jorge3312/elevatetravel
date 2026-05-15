@@ -1,73 +1,120 @@
-<!-- ═══════════════════════════════════════════
-         HERO — imagen dinámica del primer destino
-    ═══════════════════════════════════════════ -->
-<section class="relative h-screen w-full flex flex-col justify-end overflow-hidden">
+<section class="relative h-screen w-full flex overflow-hidden bg-black">
 
-  <!-- Fondo dinámico -->
-  <div class="absolute inset-0">
-    <img
-      *ngIf="heroDestination?.photo_url; else heroBg"
-      [src]="heroDestination.photo_url"
-      [alt]="heroDestination.city"
-      class="w-full h-full object-cover"
-    />
-    <ng-template #heroBg>
-      <div class="w-full h-full bg-gradient-to-br from-zinc-900 via-zinc-800 to-black"></div>
-    </ng-template>
-    <!-- Degradados -->
-    <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-transparent"></div>
-    <div class="absolute inset-0 bg-gradient-to-t from-[#0f0f0f] via-transparent to-black/40"></div>
+  <!-- Dynamic Backgrounds -->
+  <div class="absolute inset-0 w-full h-full">
+    <div *ngFor="let dest of destinations; let i = index"
+         class="absolute inset-0 transition-opacity duration-1000 ease-in-out"
+         [class.opacity-100]="i === activeDestIndex"
+         [class.opacity-0]="i !== activeDestIndex"
+         [class.z-0]="i !== activeDestIndex"
+         [class.z-10]="i === activeDestIndex">
+      <img [src]="dest.photo_url" [alt]="dest.city" class="w-full h-full object-cover">
+    </div>
+    <!-- Gradient Overlay -->
+    <div class="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-black/40 to-transparent z-10 pointer-events-none"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 z-10 pointer-events-none"></div>
   </div>
 
-  <!-- Contenido hero -->
-  <div class="relative z-10 px-8 md:px-16 pb-20 max-w-[1400px] mx-auto w-full">
+  <!-- Content Container -->
+  <div class="relative z-20 w-full max-w-[1800px] mx-auto px-8 flex h-full items-center">
+    
+    <!-- Left Info Panel (Active Destination) -->
+    <div class="w-1/2 h-full relative">
+      <div *ngFor="let dest of destinations; let i = index"
+           class="absolute left-0 top-1/2 -translate-y-1/2 w-full pr-12 transition-all duration-700 ease-out"
+           [ngClass]="{
+             'opacity-100 translate-y-[-50%] pointer-events-auto': i === activeDestIndex,
+             'opacity-0 translate-y-[20px] pointer-events-none': i !== activeDestIndex
+           }">
+        
+        <!-- Subtitle -->
+        <div class="flex items-center gap-4 mb-5">
+          <div class="w-8 h-[2px] bg-white"></div>
+          <span class="text-white text-sm font-medium tracking-widest uppercase">{{ dest.city }} - {{ dest.country }}</span>
+        </div>
 
-    <!-- Etiqueta superior -->
-    <div class="flex items-center gap-3 mb-6" *ngIf="heroDestination">
-      <div class="h-px w-10 bg-amber-400"></div>
-      <span class="text-xs tracking-[0.3em] uppercase text-amber-400 font-medium">
-            {{ heroDestination.city }}
-          </span>
+        <!-- Giant Title -->
+        <h1 class="text-white text-7xl md:text-[6rem] lg:text-[7rem] font-black uppercase font-display leading-[0.85] tracking-tighter mb-8 drop-shadow-xl"
+            style="text-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+          {{ dest.title || dest.city }}
+        </h1>
+
+        <!-- Description -->
+        <p class="text-white/80 max-w-lg text-sm leading-relaxed mb-10 line-clamp-3 font-light">
+          {{ dest.description || 'Descubre una experiencia inolvidable en ' + dest.city + '. Sumérgete en la cultura, explora paisajes impresionantes y crea recuerdos que durarán toda la vida. Elevate Travel te lleva más allá.' }}
+        </p>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center gap-6">
+          <button class="w-14 h-14 rounded-full bg-[#eab308] hover:bg-[#ca8a04] flex items-center justify-center text-white transition-all shadow-[0_0_20px_rgba(234,179,8,0.4)] hover:scale-105">
+            <i class="pi pi-bookmark-fill text-lg"></i>
+          </button>
+          
+          <!-- WhatsApp Contact Button -->
+          <a href="https://wa.me/1234567890?text=Hola, estoy interesado en viajar a {{ dest.city }}" target="_blank"
+             class="group flex items-center gap-3 px-8 py-4 rounded-full border-2 border-white/40 hover:border-[#25D366] text-white transition-all duration-300 backdrop-blur-sm bg-black/10 hover:bg-[#25D366]/10">
+            <span class="text-xs font-bold tracking-widest uppercase group-hover:text-[#25D366] transition-colors">Contáctanos vía WhatsApp</span>
+            <i class="pi pi-whatsapp text-lg group-hover:text-[#25D366] transition-colors"></i>
+          </a>
+        </div>
+      </div>
     </div>
 
-    <!-- Título grande -->
-    <h1 class="font-display font-bold uppercase leading-[0.85] tracking-tighter text-white mb-8"
-        style="font-size: clamp(4rem, 12vw, 11rem)">
-      <ng-container *ngIf="heroDestination; else loadingHero">
-        {{ heroDestination.country }}
-      </ng-container>
-      <ng-template #loadingHero>
-        <span class="opacity-30">Cargando...</span>
-      </ng-template>
-    </h1>
-
-    <!-- Stats rápidos -->
-    <div class="flex flex-wrap gap-10 text-white/60 text-xs tracking-widest uppercase" *ngIf="destinations.length">
-      <div>
-        <span class="text-3xl font-light text-white block">{{ destinations.length }}</span>
-        Destinos
-      </div>
-      <div>
-        <span class="text-3xl font-light text-white block">{{ packages.length }}</span>
-        Paquetes
-      </div>
-      <div>
-        <span class="text-3xl font-light text-white block">{{ events.length }}</span>
-        Eventos
-      </div>
-    </div>
   </div>
 
-  <!-- Indicador scroll -->
-  <div class="absolute bottom-8 right-10 z-10 flex flex-col items-center gap-2">
-    <span class="text-[10px] tracking-widest uppercase text-white/30 rotate-90 mb-6">Scroll</span>
-    <div class="w-px h-12 bg-white/20 relative overflow-hidden">
-      <div class="w-full h-1/2 bg-amber-400 animate-bounce-slow absolute top-0"></div>
-    </div>
+  <!-- Right/Bottom Slider Carousel -->
+  <div class="absolute right-0 bottom-36 w-full max-w-[50%] overflow-visible z-30">
+     <!-- Slides -->
+     <div class="flex gap-6 transition-transform duration-700 ease-out pl-10"
+          [style.transform]="'translateX(-' + (activeDestIndex * 260) + 'px)'">
+        
+        <div *ngFor="let dest of destinations; let i = index"
+             class="min-w-[240px] w-[240px] h-[340px] rounded-[1.5rem] overflow-hidden relative cursor-pointer group shadow-2xl transition-all duration-700 ease-in-out border border-white/10"
+             [ngClass]="i === activeDestIndex ? 'opacity-0 scale-90 translate-y-10 pointer-events-none' : 'opacity-100 scale-100 hover:-translate-y-3'"
+             (click)="goToDest(i, $event)">
+           
+           <img [src]="dest.photo_url" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+           
+           <!-- Overlay Card Gradient -->
+           <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
+           
+           <!-- Card Content -->
+           <div class="absolute bottom-6 left-6 pr-4">
+             <div class="flex items-center gap-2 mb-2">
+               <div class="w-3 h-[2px] bg-amber-400"></div>
+               <span class="text-[10px] text-white/80 uppercase tracking-widest">{{ dest.country }}</span>
+             </div>
+             <h3 class="text-white font-black font-display text-2xl uppercase leading-none tracking-tight">{{ dest.title || dest.city }}</h3>
+           </div>
+        </div>
+
+     </div>
   </div>
 
-  <!-- Barra inferior amber -->
-  <div class="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-amber-400 to-transparent w-1/2 z-10"></div>
+  <!-- Bottom Controls -->
+  <div class="absolute bottom-12 right-0 w-full max-w-[50%] pr-12 z-30 flex items-center justify-between pl-10">
+     <!-- Arrows -->
+     <div class="flex items-center gap-4">
+        <button (click)="prevDest()" class="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all backdrop-blur-sm group">
+           <i class="pi pi-angle-left text-xl group-hover:-translate-x-0.5 transition-transform"></i>
+        </button>
+        <button (click)="nextDest()" class="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all backdrop-blur-sm group">
+           <i class="pi pi-angle-right text-xl group-hover:translate-x-0.5 transition-transform"></i>
+        </button>
+     </div>
+     
+     <!-- Progress Indicator -->
+     <div class="flex items-center gap-6">
+        <div class="w-48 h-[2px] bg-white/20 relative overflow-hidden">
+           <div class="absolute top-0 left-0 h-full bg-amber-400 transition-all duration-500 ease-out"
+                [style.width]="((activeDestIndex + 1) / (destinations.length || 1) * 100) + '%'"></div>
+        </div>
+        <div class="text-5xl font-display font-bold text-white tracking-tighter">
+           {{ (activeDestIndex + 1).toString().padStart(2, '0') }}
+        </div>
+     </div>
+  </div>
+
 </section>
 
 

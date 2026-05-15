@@ -5,52 +5,53 @@
     class="fixed top-0 left-0 w-full z-50 transition-all duration-500"
     [ngClass]="scrolled ? 'bg-white dark:bg-black shadow-lg border-b border-zinc-200 dark:border-white/10' : ''"
   >
-  <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-
-    <!-- Logo -->
-    <a routerLink="/" class="flex items-center gap-3 group py-2">
-      <img src="logo.png" alt="Elevate Travel MR" class="h-[72px] w-auto object-contain transition-transform duration-300 group-hover:scale-105">
-    </a>
-
-    <!-- Links (desktop) -->
-    <div class="hidden md:flex items-center gap-10">
-      <a routerLink="/destinations" class="nav-link text-xs tracking-widest uppercase transition-colors duration-200 relative group"
-         [ngClass]="(isHome && !scrolled) ? 'text-white/60 hover:text-white' : 'text-zinc-900 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white'">
-        Destinos
-        <span class="absolute -bottom-1 left-0 w-0 h-px bg-amber-400 group-hover:w-full transition-all duration-300"></span>
-      </a>
-      <a routerLink="/packages" class="nav-link text-xs tracking-widest uppercase transition-colors duration-200 relative group"
-         [ngClass]="(isHome && !scrolled) ? 'text-white/60 hover:text-white' : 'text-zinc-900 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white'">
-        Paquetes
-        <span class="absolute -bottom-1 left-0 w-0 h-px bg-amber-400 group-hover:w-full transition-all duration-300"></span>
-      </a>
-      <a routerLink="/events" class="nav-link text-xs tracking-widest uppercase transition-colors duration-200 relative group"
-         [ngClass]="(isHome && !scrolled) ? 'text-white/60 hover:text-white' : 'text-zinc-900 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white'">
-        Eventos
-        <span class="absolute -bottom-1 left-0 w-0 h-px bg-amber-400 group-hover:w-full transition-all duration-300"></span>
-      </a>
-      <a routerLink="/visas" class="nav-link text-xs tracking-widest uppercase transition-colors duration-200 relative group"
-         [ngClass]="(isHome && !scrolled) ? 'text-white/60 hover:text-white' : 'text-zinc-900 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white'">
-        Visas
-        <span class="absolute -bottom-1 left-0 w-0 h-px bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+  <div class="max-w-[1800px] mx-auto px-8 h-24 flex items-center justify-between w-full">
+    <!-- Left Section: Logo -->
+    <div class="flex items-center gap-4 w-1/4">
+      <a routerLink="/" class="flex items-center group py-2">
+        <img src="logo.png" alt="Elevate Travel MR" class="h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105">
       </a>
     </div>
 
-    <div class="hidden md:flex items-center gap-4">
+    <!-- Center Section: Links (desktop) -->
+    <div class="hidden md:flex items-center justify-center gap-10 w-2/4">
+      <a routerLink="/destinations" class="text-xs tracking-widest font-bold uppercase transition-colors relative group"
+         [ngClass]="(isHome && !scrolled) ? 'text-white hover:text-amber-400' : 'text-zinc-900 dark:text-white/80 hover:text-amber-500'">
+        Destinos
+        <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+      </a>
+      <a routerLink="/packages" class="text-xs tracking-widest font-bold uppercase transition-colors relative group"
+         [ngClass]="(isHome && !scrolled) ? 'text-white hover:text-amber-400' : 'text-zinc-900 dark:text-white/80 hover:text-amber-500'">
+        Paquetes
+        <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+      </a>
+      <a routerLink="/events" class="text-xs tracking-widest font-bold uppercase transition-colors relative group"
+         [ngClass]="(isHome && !scrolled) ? 'text-white hover:text-amber-400' : 'text-zinc-900 dark:text-white/80 hover:text-amber-500'">
+        Eventos
+        <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+      </a>
+      <a routerLink="/visas" class="text-xs tracking-widest font-bold uppercase transition-colors relative group"
+         [ngClass]="(isHome && !scrolled) ? 'text-white hover:text-amber-400' : 'text-zinc-900 dark:text-white/80 hover:text-amber-500'">
+        Visas
+        <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+      </a>
+    </div>
+
+    <!-- Right Section -->
+    <div class="hidden md:flex items-center justify-end gap-6 w-1/4">
+      <!-- WhatsApp Icon -->
+      <a href="https://wa.me/1234567890" target="_blank" class="transition-colors hover:scale-110" [ngClass]="(isHome && !scrolled) ? 'text-white hover:text-[#25D366]' : 'text-zinc-900 dark:text-white/80 hover:text-[#25D366]'">
+        <i class="pi pi-whatsapp text-lg"></i>
+      </a>
       <!-- Theme Toggle -->
-      <button (click)="themeService.toggleTheme()" class="flex items-center justify-center w-10 h-10 rounded-full border transition-all duration-300"
-              [ngClass]="(isHome && !scrolled) ? 'text-white border-white/20 hover:bg-white/10' : 'bg-white dark:bg-black border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-white/5'">
-        <i class="pi" [ngClass]="themeService.isDark() ? 'pi-sun' : 'pi-moon'"></i>
+      <button (click)="themeService.toggleTheme()" class="transition-colors hover:text-amber-400"
+              [ngClass]="(isHome && !scrolled) ? 'text-white' : 'text-zinc-900 dark:text-white'">
+        <i class="pi text-lg" [ngClass]="themeService.isDark() ? 'pi-sun' : 'pi-moon'"></i>
       </button>
 
-      <!-- Admin CTA -->
-      <a
-        routerLink="/login"
-        class="flex items-center gap-2 text-xs tracking-widest uppercase border px-5 py-2.5 rounded-full hover:bg-amber-400 hover:text-black hover:border-amber-400 transition-all duration-300 font-medium"
-        [ngClass]="(isHome && !scrolled) ? 'text-white border-white/20' : 'text-zinc-900 dark:text-white border-zinc-300 dark:border-white/20'"
-      >
-        <i class="pi pi-lock text-xs"></i>
-        Portal Admin
+      <a routerLink="/login" class="flex items-center gap-2 text-xs border px-5 py-2 rounded-full transition-all duration-300 font-bold tracking-widest uppercase"
+         [ngClass]="(isHome && !scrolled) ? 'text-white border-white/30 hover:bg-white/10' : 'text-zinc-900 dark:text-white border-zinc-300 dark:border-white/20 hover:bg-zinc-100 dark:hover:bg-white/5'">
+        <i class="pi pi-user mr-1"></i> Admin
       </a>
     </div>
 
