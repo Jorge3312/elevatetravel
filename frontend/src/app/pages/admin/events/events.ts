@@ -30,12 +30,29 @@ export class Events implements OnInit {
   isEditing = false;
   currentId: string | null = null;
 
-  includesOptions = [
-    { label: 'NOCHES DE ALOJAMIENTO HOTEL A ELECCION. (Calculado por fechas)', value: 'ALOJAMIENTO' },
-    { label: 'DESAYUNOS', value: 'DESAYUNOS' },
-    { label: 'Seguro DE ASISTENCIA AL VIAJERO.', value: 'Seguro DE ASISTENCIA AL VIAJERO.' },
-    { label: 'TRASLADOS AEROPUERTO - HOTEL - AEROPUERTO.', value: 'TRASLADOS AEROPUERTO - HOTEL - AEROPUERTO.' }
-  ];
+  includesList: string[] = [];
+  newService = '';
+
+  addService() {
+    if (this.newService.trim()) {
+      const upperService = this.newService.trim().toUpperCase();
+      if (!this.includesList.includes(upperService)) {
+        this.includesList.push(upperService);
+      }
+      this.newService = '';
+    }
+  }
+
+  addSuggestion(suggestion: string) {
+    const upperSuggestion = suggestion.toUpperCase();
+    if (!this.includesList.includes(upperSuggestion)) {
+      this.includesList.push(upperSuggestion);
+    }
+  }
+
+  removeService(index: number) {
+    this.includesList.splice(index, 1);
+  }
 
   form: FormGroup = this.fb.group({
     destination_id: ['', Validators.required],
@@ -64,6 +81,8 @@ export class Events implements OnInit {
   showDialog() {
     this.isEditing = false;
     this.currentId = null;
+    this.includesList = [];
+    this.newService = '';
     this.form.reset({ is_active: true, base_price: 0, includes: [] });
     this.displayDialog = true;
   }
@@ -78,13 +97,15 @@ export class Events implements OnInit {
       return inc;
     });
 
+    this.includesList = mappedIncludes;
+    this.newService = '';
+
     this.form.patchValue({
       ...evt,
       destination_id: evt.destination?.id,
       start_date: evt.start_date ? new Date(evt.start_date) : null,
       end_date: evt.end_date ? new Date(evt.end_date) : null,
-      base_price: evt.price_from || 0,
-      includes: mappedIncludes
+      base_price: evt.price_from || 0
     });
     this.displayDialog = true;
   }
@@ -92,21 +113,29 @@ export class Events implements OnInit {
   saveEvent() {
     if (this.form.invalid) return;
 
-    const formValue = { ...this.form.value };
-
-    if (formValue.start_date && formValue.end_date) {
-      const start = new Date(formValue.start_date);
-      const end = new Date(formValue.end_date);
+    // Calculate nights for Alojamiento if present
+    let finalIncludes = [...this.includesList];
+    if (this.form.value.start_date && this.form.value.end_date) {
+      const start = new Date(this.form.value.start_date);
+      const end = new Date(this.form.value.end_date);
       const diffTime = Math.abs(end.getTime() - start.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       const nights = diffDays > 0 ? diffDays : 0;
       const paddedNights = nights < 10 ? `0${nights}` : nights;
 
-      formValue.includes = (formValue.includes || []).map((inc: string) => {
-        if (inc === 'ALOJAMIENTO') return `${paddedNights} NOCHES DE ALOJAMIENTO HOTEL A ELECCION.`;
+      finalIncludes = finalIncludes.map((inc: string) => {
+        if (inc === 'ALOJAMIENTO' || (inc.includes('NOCHES DE ALOJAMIENTO') && !/^\d+/.test(inc))) {
+          return `${paddedNights} NOCHES DE ALOJAMIENTO HOTEL A ELECCION.`;
+        }
         return inc;
       });
     }
+
+    this.form.patchValue({
+      includes: finalIncludes
+    });
+
+    const formValue = { ...this.form.value };
 
     const req = this.isEditing && this.currentId
       ? this.eventsService.update(this.currentId, formValue)

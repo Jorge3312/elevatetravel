@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DestinationsService } from '../../core/services/destinations';
 import { EventsService } from '../../core/services/events';
 import { PackagesService } from '../../core/services/packages';
+import { ConfigService } from '../../core/services/config';
 import { DialogModule } from 'primeng/dialog';
 import { forkJoin } from 'rxjs';
 
@@ -20,9 +21,11 @@ import { forkJoin } from 'rxjs';
 export class Catalog implements OnInit {
   private eventsService = inject(EventsService);
   private packagesService = inject(PackagesService);
+  private configService = inject(ConfigService);
   private route = inject(ActivatedRoute);
 
   events: any[] = [];
+  whatsappNumber = '1234567890';
   packages: any[] = [];
   filter: 'all' | 'events' | 'packages' = 'all';
 
@@ -31,6 +34,12 @@ export class Catalog implements OnInit {
   selectedType: 'event' | 'package' | null = null;
 
   ngOnInit() {
+    this.configService.getSettings().subscribe(settings => {
+      if (settings && settings.whatsapp_general) {
+        this.whatsappNumber = settings.whatsapp_general.replace(/\D/g, '');
+      }
+    });
+
     forkJoin({
       events: this.eventsService.getPublicEvents(),
       packages: this.packagesService.getPublicPackages()

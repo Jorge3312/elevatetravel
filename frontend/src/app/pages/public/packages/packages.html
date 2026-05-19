@@ -20,17 +20,37 @@
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
     @for (pkg of filteredPackages; track pkg.id) {
       <div class="glass-panel rounded-2xl overflow-hidden cursor-pointer group" (click)="showDetails(pkg)">
-        <div class="h-64 relative overflow-hidden bg-white dark:bg-black/5 dark:bg-white/5 flex items-center justify-center">
+        <div class="h-64 relative overflow-hidden bg-white dark:bg-black/5 flex items-center justify-center">
           <i class="pi pi-briefcase text-6xl text-zinc-900 dark:text-white/20 group-hover:scale-110 transition-transform duration-700" *ngIf="!pkg.destination?.photo_url && !pkg.photo_url"></i>
           <img *ngIf="pkg.destination?.photo_url || pkg.photo_url" [src]="pkg.photo_url || pkg.destination?.photo_url" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
-          <div class="absolute top-4 left-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs tracking-widest uppercase">Paquete</div>
+          
+          <div *ngIf="getPackageOffer(pkg.id)" class="absolute top-4 left-4 bg-amber-500 text-white font-bold px-3 py-1 rounded-full text-xs tracking-wider uppercase shadow-md">
+            Descuento de {{ getPackageOffer(pkg.id).discount_percentage | number:'1.0-0' }}%
+          </div>
+          <div *ngIf="!getPackageOffer(pkg.id)" class="absolute top-4 left-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs tracking-widest uppercase">
+            Paquete
+          </div>
         </div>
         <div class="p-6">
           <p class="text-zinc-900 dark:text-white/50 text-xs tracking-widest uppercase mb-2">{{ pkg.destination?.city }}</p>
           <h3 class="text-xl font-light mb-4">{{ pkg.name }}</h3>
-          <div class="flex justify-between items-center text-sm">
-            <span class="text-zinc-900 dark:text-white/70">{{ pkg.days }} Días / {{ pkg.nights }} Noches</span>
-            <span class="font-medium">{{ pkg.price_from | currency }}</span>
+          
+          <div class="flex justify-between items-end border-t border-zinc-100 dark:border-white/5 pt-4 mt-2">
+            <span class="text-zinc-900 dark:text-white/70 text-sm font-light mb-1">{{ pkg.days }} Días / {{ pkg.nights }} Noches</span>
+            
+            <div class="flex flex-col items-end">
+              <span *ngIf="getPackageOffer(pkg.id)" class="text-[10px] line-through text-zinc-400 dark:text-white/30 font-light mb-0.5">
+                {{ (pkg.price_from || pkg.base_price) | currency }}
+              </span>
+              <span class="font-medium text-lg" [ngClass]="getPackageOffer(pkg.id) ? 'text-amber-600 dark:text-amber-400' : 'text-zinc-900 dark:text-white'">
+                <span *ngIf="getPackageOffer(pkg.id)">
+                  {{ getDiscountedPrice(pkg.price_from || pkg.base_price, getPackageOffer(pkg.id).discount_percentage) | currency }}
+                </span>
+                <span *ngIf="!getPackageOffer(pkg.id)">
+                  {{ (pkg.price_from || pkg.base_price) | currency }}
+                </span>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -45,37 +65,22 @@
   </button>
   
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-    <!-- Image Column -->
-    <div class="rounded-3xl overflow-hidden h-[400px] lg:h-[700px] relative border border-zinc-100 dark:border-white/5">
-      <img [src]="selectedItem.photo_url || selectedItem.destination?.photo_url || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070'" class="w-full h-full object-cover">
-      <div class="absolute top-6 left-6 bg-white dark:bg-black/60 backdrop-blur-md px-4 py-2 rounded-full text-xs tracking-widest uppercase border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white">
-        Paquete
-      </div>
-    </div>
-    
-    <!-- Details Column -->
-    <div class="flex flex-col justify-center">
-      <div class="inline-flex items-center gap-2 text-zinc-900 dark:text-white/50 text-xs tracking-[0.2em] uppercase mb-4">
-        <i class="pi pi-map-marker text-zinc-900 dark:text-white/40"></i>
-        <span>Destino: {{ selectedItem.destination?.city || 'No especificado' }}{{ selectedItem.destination?.country ? ', ' + selectedItem.destination?.country : '' }}</span>
-      </div>
-      
-      <h1 class="text-4xl md:text-5xl font-light tracking-tight mb-6 leading-tight">{{ selectedItem.name }}</h1>
-      
-      <p class="text-zinc-900 dark:text-white/70 font-light leading-relaxed mb-8 text-lg">
-        {{ selectedItem.description || 'Detalles exclusivos de esta experiencia disponibles bajo consulta. Descubre lo que tenemos preparado para ti.' }}
-      </p>
-
-      <div class="grid grid-cols-2 gap-6 mb-10 border-y border-zinc-200 dark:border-white/10 py-8">
-        <div>
-          <p class="text-zinc-900 dark:text-white/40 text-xs tracking-widest uppercase mb-2">Duración</p>
-          <p class="text-xl font-light tracking-wide">{{ selectedItem.days }} Días / {{ selectedItem.nights }} Noches</p>
+    <!-- Left Column (Image & Includes) -->
+    <div class="flex flex-col gap-6">
+      <div class="rounded-3xl overflow-hidden h-[400px] lg:h-[500px] relative border border-zinc-100 dark:border-white/5">
+        <img [src]="selectedItem.photo_url || selectedItem.destination?.photo_url || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070'" class="w-full h-full object-cover">
+        
+        <div *ngIf="getPackageOffer(selectedItem.id)" class="absolute top-6 left-6 bg-amber-500 text-white font-bold px-5 py-2 rounded-full text-xs tracking-widest uppercase shadow-lg">
+          Descuento de {{ getPackageOffer(selectedItem.id).discount_percentage | number:'1.0-0' }}%
+        </div>
+        <div *ngIf="!getPackageOffer(selectedItem.id)" class="absolute top-6 left-6 bg-white dark:bg-black/60 backdrop-blur-md px-4 py-2 rounded-full text-xs tracking-widest uppercase border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white">
+          Paquete
         </div>
       </div>
       
-      <!-- Includes Section -->
+      <!-- Includes Section underneath the image -->
       @if (selectedItem.includes && selectedItem.includes.length > 0) {
-        <div class="mb-10">
+        <div>
           <h3 class="text-sm font-medium mb-5 uppercase tracking-widest text-zinc-900 dark:text-white/60">El paquete incluye:</h3>
           <div class="grid grid-cols-1 gap-4">
             @for (inc of selectedItem.includes; track $index) {
@@ -89,20 +94,62 @@
           </div>
         </div>
       }
+    </div>
+    
+    <!-- Details Column -->
+    <div class="flex flex-col justify-start">
+      <div class="inline-flex items-center gap-2 text-zinc-900 dark:text-white/50 text-xs tracking-[0.2em] uppercase mb-4">
+        <i class="pi pi-map-marker text-zinc-900 dark:text-white/40"></i>
+        <span>Destino: {{ selectedItem.destination?.city || 'No especificado' }}{{ selectedItem.destination?.country ? ', ' + selectedItem.destination?.country : '' }}</span>
+      </div>
+      
+      <h1 class="text-4xl md:text-5xl font-light tracking-tight mb-6 leading-tight">{{ selectedItem.name }}</h1>
+      
+      <p class="text-zinc-900 dark:text-white/70 font-light leading-relaxed mb-8 text-lg">
+        {{ selectedItem.description || 'Detalles exclusivos de esta experiencia disponibles bajo consulta. Descubre lo que tenemos preparado para ti.' }}
+      </p>
 
-      <div class="bg-white dark:bg-black/40 rounded-3xl p-8 backdrop-blur-md border border-zinc-200 dark:border-white/10 mt-auto shadow-2xl">
-        <div class="flex flex-col mb-8">
-          <p class="text-zinc-900 dark:text-white/50 text-xs tracking-widest uppercase mb-2">Inversión</p>
-          <p class="text-4xl md:text-5xl font-light tracking-tight">Desde {{ (selectedItem.price_from || selectedItem.base_price) | currency }}</p>
+      <div class="border-y border-zinc-200 dark:border-white/10 py-8 mb-8 space-y-6">
+        <div>
+          <p class="text-zinc-900 dark:text-white/40 text-xs tracking-widest uppercase mb-2">Duración</p>
+          <p class="text-xl font-light tracking-wide">{{ selectedItem.days }} Días / {{ selectedItem.nights }} Noches</p>
         </div>
-        
-        <div class="space-y-4 border-t border-zinc-200 dark:border-white/10 pt-8">
-          <h4 class="text-xs tracking-widest uppercase text-zinc-900 dark:text-white/50 text-center">¿Tienes preguntas?</h4>
-          <a href="https://wa.me/1234567890?text=Hola, estoy interesado en el paquete: {{ selectedItem.name }}" target="_blank" 
-             class="flex items-center justify-center gap-3 w-full bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20 border border-[#25D366]/20 px-6 py-4 rounded-full text-sm uppercase tracking-widest transition-all hover:scale-[1.02]">
-            <i class="pi pi-whatsapp text-xl"></i>
-            Contactar por WhatsApp
-          </a>
+
+        <div class="pt-6 border-t border-zinc-200 dark:border-white/10">
+          <p class="text-zinc-900 dark:text-white/40 text-xs tracking-widest uppercase mb-2">Inversión</p>
+          
+          <div class="flex items-baseline gap-3 flex-wrap mb-4">
+            @if (getPackageOffer(selectedItem.id)) {
+              <div class="flex flex-col">
+                <span class="text-xs line-through text-zinc-400 dark:text-white/30 font-light">
+                  Antes {{ (selectedItem.price_from || selectedItem.base_price) | currency }}
+                </span>
+                <span class="text-3xl font-light tracking-tight text-amber-600 dark:text-amber-400">
+                  {{ getDiscountedPrice(selectedItem.price_from || selectedItem.base_price, getPackageOffer(selectedItem.id).discount_percentage) | currency }}
+                </span>
+              </div>
+            } @else {
+              <span class="text-3xl font-light tracking-tight">
+                Desde {{ (selectedItem.price_from || selectedItem.base_price) | currency }}
+              </span>
+            }
+          </div>
+
+          <div class="pt-2">
+            <a *ngIf="getPackageOffer(selectedItem.id)" 
+               [href]="'https://wa.me/' + whatsappNumber + '?text=Hola, estoy muy interesado en el paquete: ' + selectedItem.name + ' con la oferta especial de descuento de ' + (getPackageOffer(selectedItem.id).discount_percentage | number:'1.0-0') + '%!'" target="_blank" 
+               class="inline-flex items-center justify-center gap-3 bg-[#25D366] text-white hover:bg-[#22c35e] px-8 py-3.5 rounded-full text-xs uppercase tracking-widest transition-all hover:scale-[1.02] font-semibold shadow-lg shadow-green-500/10">
+              <i class="pi pi-whatsapp text-lg"></i>
+              Reservar con Descuento
+            </a>
+
+            <a *ngIf="!getPackageOffer(selectedItem.id)" 
+               [href]="'https://wa.me/' + whatsappNumber + '?text=Hola, estoy interesado en el paquete: ' + selectedItem.name" target="_blank" 
+               class="inline-flex items-center justify-center gap-3 bg-[#25D366] text-white hover:bg-[#22c35e] px-8 py-3.5 rounded-full text-xs uppercase tracking-widest transition-all hover:scale-[1.02] font-semibold shadow-lg shadow-green-500/10">
+              <i class="pi pi-whatsapp text-lg"></i>
+              Contactar por WhatsApp
+            </a>
+          </div>
         </div>
       </div>
     </div>

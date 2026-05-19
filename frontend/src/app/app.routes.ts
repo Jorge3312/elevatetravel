@@ -20,6 +20,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: Home },
       { path: 'destinations', loadComponent: () => import('./pages/public/destinations/destinations').then(m => m.PublicDestinations) },
+      { path: 'offers', loadComponent: () => import('./pages/public/offers/offers').then(m => m.PublicOffers) },
       { path: 'packages', loadComponent: () => import('./pages/public/packages/packages').then(m => m.PublicPackages) },
       { path: 'events', loadComponent: () => import('./pages/public/events/events').then(m => m.PublicEvents) },
       { path: 'visas', loadComponent: () => import('./pages/public/visas/visas').then(m => m.PublicVisas) },

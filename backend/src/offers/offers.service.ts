@@ -15,8 +15,8 @@ export class OffersService {
   findAllActive() {
     return this.offersRepository.createQueryBuilder('offer')
       .leftJoinAndSelect('offer.package', 'package')
+      .leftJoinAndSelect('package.destination', 'destination')
       .where('offer.is_active = :isActive', { isActive: true })
-      .andWhere('(offer.valid_until IS NULL OR offer.valid_until >= CURRENT_DATE)')
       .orderBy('offer.created_at', 'DESC')
       .getMany();
   }
@@ -24,6 +24,7 @@ export class OffersService {
   findAll(query: any) {
     const qb = this.offersRepository.createQueryBuilder('offer')
       .leftJoinAndSelect('offer.package', 'package')
+      .leftJoinAndSelect('package.destination', 'destination')
       .orderBy('offer.created_at', 'DESC');
 
     if (query.search) {
@@ -35,7 +36,7 @@ export class OffersService {
   async findOne(id: string) {
     const offer = await this.offersRepository.findOne({ 
       where: { id },
-      relations: ['package']
+      relations: ['package', 'package.destination']
     });
     if (!offer) throw new NotFoundException('Oferta no encontrada');
     return offer;

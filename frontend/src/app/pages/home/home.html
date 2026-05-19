@@ -1,4 +1,5 @@
-<section class="relative h-screen w-full flex overflow-hidden" [ngClass]="themeService.isDark() ? 'bg-black' : 'bg-elevate-light'">
+<section class="relative w-full flex overflow-hidden"
+  [ngClass]="themeService.isDark() ? 'h-screen bg-black' : 'mt-24 h-[calc(100vh-6rem)] bg-elevate-light'">
 
   <!-- Dynamic Backgrounds -->
   <div class="absolute inset-0 w-full h-full">
@@ -10,10 +11,10 @@
     </div>
     <!-- Gradient Overlay -->
     <div class="absolute inset-0 z-10 pointer-events-none"
-      [ngClass]="themeService.isDark() ? 'bg-gradient-to-r from-[#0a0a0a] via-black/40 to-transparent' : 'bg-gradient-to-r from-elevate-light via-elevate-light/40 to-transparent'">
+      [ngClass]="themeService.isDark() ? 'bg-gradient-to-r from-[#0a0a0a] via-black/40 to-transparent' : 'bg-gradient-to-r from-elevate-light via-transparent to-transparent'">
     </div>
     <div class="absolute inset-0 z-10 pointer-events-none"
-      [ngClass]="themeService.isDark() ? 'bg-gradient-to-t from-black/60 via-transparent to-black/20' : 'bg-gradient-to-t from-elevate-light/60 via-transparent to-elevate-light/20'">
+      [ngClass]="themeService.isDark() ? 'bg-gradient-to-t from-black/60 via-transparent to-black/20' : 'bg-gradient-to-t from-elevate-light/40 via-transparent to-transparent'">
     </div>
   </div>
 
@@ -23,8 +24,7 @@
     <!-- Left Column: Active Destination Info (40%) -->
     <div class="w-[40%] h-full relative">
       <div *ngFor="let dest of destinations; let i = index"
-        class="absolute left-0 top-1/2 -translate-y-1/2 w-full pr-12 transition-all duration-700 ease-out" 
-        [ngClass]="{
+        class="absolute left-0 top-1/2 -translate-y-1/2 w-full pr-12 transition-all duration-700 ease-out" [ngClass]="{
              'opacity-100 translate-y-[-50%] pointer-events-auto': i === activeDestIndex,
              'opacity-0 translate-y-[20px] pointer-events-none': i !== activeDestIndex
            }">
@@ -32,7 +32,9 @@
         <!-- Subtitle -->
         <div class="flex items-center gap-4 mb-5">
           <div class="w-8 h-[2px]" [ngClass]="themeService.isDark() ? 'bg-white' : 'bg-zinc-900'"></div>
-          <span class="text-sm font-medium tracking-widest uppercase" [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'">{{ dest.city }} - {{ dest.country }}</span>
+          <span class="text-sm font-medium tracking-widest uppercase"
+            [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'">{{ dest.city }} - {{ dest.country
+            }}</span>
         </div>
 
         <!-- Giant Title -->
@@ -44,18 +46,22 @@
         </h1>
 
         <!-- Description -->
-        <p class="max-w-lg text-sm leading-relaxed mb-10 line-clamp-3 font-light"
-          [ngClass]="themeService.isDark() ? 'text-white/80' : 'text-zinc-900/80'">
-          {{ dest.description || 'Descubre una experiencia inolvidable en ' + dest.city + '. Sumérgete en la cultura, explora paisajes impresionantes y crea recuerdos que durarán toda la vida. Elevate Travel te lleva más allá.' }}
+        <p class="max-w-lg leading-relaxed mb-10 line-clamp-3 transition-all duration-300"
+          [ngClass]="themeService.isDark() ? 'text-sm font-light text-white/80' : 'text-xl font-bold text-zinc-950'">
+          {{ dest.description || 'Descubre una experiencia inolvidable en ' + dest.city + '. Sumérgete en la cultura,
+          explora paisajes impresionantes y crea recuerdos que durarán toda la vida. Elevate Travel te lleva más allá.'
+          }}
         </p>
 
         <!-- Action Buttons -->
         <div class="flex items-center gap-6">
           <!-- WhatsApp Contact Button -->
-          <a href="https://wa.me/1234567890?text=Hola, estoy interesado en viajar a {{ dest.city }}" target="_blank"
-            class="group flex items-center gap-3 px-8 py-4 rounded-full border-2 transition-all duration-300 backdrop-blur-sm"
+          <a [href]="'https://wa.me/' + whatsappNumber + '?text=Hola, estoy interesado en viajar a ' + dest.city" target="_blank"
+             class="group flex items-center gap-3 px-8 py-4 rounded-full border-2 transition-all duration-300 backdrop-blur-sm"
             [ngClass]="themeService.isDark() ? 'border-white/40 text-white bg-black/10 hover:bg-[#25D366]/10 hover:border-[#25D366]' : 'border-zinc-900/40 text-zinc-900 bg-white/10 hover:bg-[#25D366]/10 hover:border-[#25D366]'">
-            <span class="text-xs font-bold tracking-widest uppercase group-hover:text-[#25D366] transition-colors">Contáctanos vía WhatsApp</span>
+            <span
+              class="text-xs font-bold tracking-widest uppercase group-hover:text-[#25D366] transition-colors">Contáctanos
+              vía WhatsApp</span>
             <i class="pi pi-whatsapp text-lg group-hover:text-[#25D366] transition-colors"></i>
           </a>
         </div>
@@ -64,7 +70,7 @@
 
     <!-- Right Column: Slider Carousel (60%) -->
     <div class="w-[60%] h-full relative flex flex-col justify-end pb-36 overflow-hidden">
-      
+
       <!-- Slides Container -->
       <div class="w-full overflow-visible">
         <div class="flex gap-6 transition-transform duration-700 ease-out"
@@ -75,8 +81,7 @@
             [ngClass]="[
               i === activeDestIndex ? 'opacity-0 scale-90 translate-y-10 pointer-events-none' : 'opacity-100 scale-100 hover:-translate-y-3',
               themeService.isDark() ? 'border border-white/10' : 'border border-zinc-200 bg-white'
-            ]"
-            (click)="goToDest(i, $event)">
+            ]" (click)="goToDest(i, $event)">
 
             <img [src]="dest.photo_url"
               class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
@@ -90,7 +95,8 @@
                 <div class="w-3 h-[2px] bg-amber-400"></div>
                 <span class="text-[10px] text-white/80 uppercase tracking-widest">{{ dest.country }}</span>
               </div>
-              <h3 class="text-white font-black font-display text-2xl uppercase leading-none tracking-tight">{{ dest.title || dest.city }}</h3>
+              <h3 class="text-white font-black font-display text-2xl uppercase leading-none tracking-tight">{{
+                dest.title || dest.city }}</h3>
             </div>
           </div>
         </div>
@@ -114,11 +120,13 @@
 
         <!-- Progress Indicator -->
         <div class="flex items-center gap-6">
-          <div class="w-48 h-[2px] relative overflow-hidden" [ngClass]="themeService.isDark() ? 'bg-white/20' : 'bg-zinc-900/20'">
+          <div class="w-48 h-[2px] relative overflow-hidden"
+            [ngClass]="themeService.isDark() ? 'bg-white/20' : 'bg-zinc-900/20'">
             <div class="absolute top-0 left-0 h-full bg-amber-400 transition-all duration-500 ease-out"
               [style.width]="((activeDestIndex + 1) / (destinations.length || 1) * 100) + '%'"></div>
           </div>
-          <div class="text-5xl font-display font-bold tracking-tighter" [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'">
+          <div class="text-5xl font-display font-bold tracking-tighter"
+            [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'">
             {{ (activeDestIndex + 1).toString().padStart(2, '0') }}
           </div>
         </div>
@@ -149,9 +157,11 @@
 
   <div class="max-w-7xl mx-auto px-6 mb-16 relative z-10 text-center">
     <span class="text-xs tracking-[0.3em] uppercase text-amber-500 mb-4 block">Explora el mundo</span>
-    <h2 class="text-4xl md:text-6xl font-display font-bold uppercase tracking-tight" [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'">Destinos Imperdibles
+    <h2 class="text-4xl md:text-6xl font-display font-bold uppercase tracking-tight"
+      [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'">Destinos Imperdibles
     </h2>
-    <p class="mt-4 max-w-2xl mx-auto font-light text-lg" [ngClass]="themeService.isDark() ? 'text-white/40' : 'text-zinc-900/40'">Asegúrate de probar nuestra selección de
+    <p class="mt-4 max-w-2xl mx-auto transition-all duration-300"
+      [ngClass]="themeService.isDark() ? 'font-light text-lg text-white/40' : 'font-bold text-2xl text-zinc-950'">Asegúrate de probar nuestra selección de
       destinos, los hemos elegido cuidadosamente para ti.</p>
   </div>
 
@@ -196,16 +206,18 @@
   <!-- Carousel Controls -->
   <div *ngIf="!loadingDest && destinations.length" class="flex justify-center items-center gap-6 mt-12 relative z-10">
     <button (click)="prevDest()" [disabled]="activeDestIndex === 0"
-      class="w-12 h-12 rounded-full border border-white/20 text-white flex items-center justify-center hover:bg-white/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+      class="w-12 h-12 rounded-full border flex items-center justify-center transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+      [ngClass]="themeService.isDark() ? 'border-white/20 text-white hover:bg-white/10' : 'border-zinc-900/20 text-zinc-900 hover:bg-zinc-900/10'">
       <i class="pi pi-chevron-left"></i>
     </button>
     <div class="flex gap-2">
       <span *ngFor="let d of destinations; let i = index" class="w-2 h-2 rounded-full transition-all duration-300"
-        [ngClass]="i === activeDestIndex ? 'bg-amber-400 w-8' : 'bg-white/20 cursor-pointer hover:bg-white/50'"
+        [ngClass]="i === activeDestIndex ? 'bg-amber-400 w-8' : (themeService.isDark() ? 'bg-white/20 cursor-pointer hover:bg-white/50' : 'bg-zinc-900/20 cursor-pointer hover:bg-zinc-900/50')"
         (click)="goToDest(i, $event)"></span>
     </div>
     <button (click)="nextDest()" [disabled]="activeDestIndex === destinations.length - 1"
-      class="w-12 h-12 rounded-full border border-white/20 text-white flex items-center justify-center hover:bg-white/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+      class="w-12 h-12 rounded-full border flex items-center justify-center transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+      [ngClass]="themeService.isDark() ? 'border-white/20 text-white hover:bg-white/10' : 'border-zinc-900/20 text-zinc-900 hover:bg-zinc-900/10'">
       <i class="pi pi-chevron-right"></i>
     </button>
   </div>
@@ -215,6 +227,109 @@
     class="max-w-7xl mx-auto px-6 text-center py-16 text-white/30 relative z-10">
     <i class="pi pi-map text-4xl mb-4 block"></i>
     <p class="tracking-widest uppercase text-sm">No hay destinos disponibles</p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     OFERTAS DE VIAJE (Descuentos)
+═══════════════════════════════════════════ -->
+<section id="offers-section" class="py-24 relative overflow-hidden transition-colors duration-500"
+  [ngClass]="themeService.isDark() ? 'bg-[#050505]' : 'bg-elevate-light'">
+  <!-- Background Grid & Icons -->
+  <div class="absolute inset-0 pointer-events-none opacity-20"
+    [style.background-image]="themeService.isDark() ? 'linear-gradient(#ffffff11 1px, transparent 1px), linear-gradient(90deg, #ffffff11 1px, transparent 1px)' : 'linear-gradient(#00000011 1px, transparent 1px), linear-gradient(90deg, #00000011 1px, transparent 1px)'"
+    [style.background-size]="'80px 80px'">
+  </div>
+  <div class="absolute top-20 right-20 text-white/5 animate-bounce-slow">
+    <i class="pi pi-percentage text-6xl"></i>
+  </div>
+  <div class="absolute bottom-40 left-20 text-white/5 animate-bounce-slow" style="animation-delay: 1.2s;">
+    <i class="pi pi-tags text-7xl"></i>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 mb-16 relative z-10 text-center">
+    <span class="text-xs tracking-[0.3em] uppercase text-amber-500 mb-4 block">Promociones Exclusivas</span>
+    <h2 class="text-4xl md:text-6xl font-display font-bold uppercase tracking-tight"
+      [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'">Ofertas Especiales</h2>
+    <p class="mt-4 max-w-2xl mx-auto transition-all duration-300"
+      [ngClass]="themeService.isDark() ? 'font-light text-lg text-white/40' : 'font-bold text-2xl text-zinc-950'">Aprovecha nuestros descuentos especiales en destinos y paquetes seleccionados.</p>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loadingOfr" class="max-w-7xl mx-auto px-6">
+    <div class="h-[450px] bg-white/5 rounded-[2rem] animate-pulse w-full max-w-md mx-auto"></div>
+  </div>
+
+  <!-- Carousel ofertas -->
+  <div *ngIf="!loadingOfr && offers.length"
+    class="relative w-full h-[450px] sm:h-[500px] flex items-center justify-center [perspective:1500px]">
+
+    <div *ngFor="let offer of offers; let i = index"
+      class="absolute w-[280px] sm:w-[320px] md:w-[380px] h-[400px] sm:h-[450px] rounded-[2rem] overflow-hidden cursor-pointer"
+      [ngClass]="themeService.isDark() ? 'shadow-2xl' : 'shadow-xl bg-white border border-zinc-100'"
+      [ngStyle]="getOfrCardStyle(i)" (click)="goToOfr(i, $event)">
+      
+      <img *ngIf="offer.package?.photo_url" [src]="offer.package.photo_url" [alt]="offer.title" class="w-full h-full object-cover" />
+      <div *ngIf="!offer.package?.photo_url" class="w-full h-full bg-zinc-800 flex items-center justify-center">
+        <i class="pi pi-image text-4xl text-white/20"></i>
+      </div>
+
+      <!-- Gradient overlay -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 pointer-events-none"></div>
+
+      <!-- Promo Badge / Percentage -->
+      <div class="absolute top-6 right-6 bg-red-600 text-white font-bold text-xs tracking-widest uppercase px-4 py-2 rounded-full shadow-lg pointer-events-none">
+        Descuento de {{ offer.discount_percentage | number:'1.0-0' }}%
+      </div>
+
+      <!-- Info Content -->
+      <div class="absolute bottom-0 left-0 p-8 w-full pointer-events-none">
+        <span class="text-[10px] tracking-widest uppercase text-amber-400 font-medium block mb-2">
+          {{ offer.package?.destination?.city || 'Destino Exclusivo' }}
+        </span>
+        <h3 class="text-3xl font-display font-bold text-white leading-none tracking-tight mb-2">
+          {{ offer.title }}
+        </h3>
+        <p class="text-xs text-white/70 line-clamp-1 mb-4" *ngIf="offer.package?.name">
+          Paquete: {{ offer.package.name }}
+        </p>
+
+        <!-- Hover / Active effect extra info -->
+        <div class="mt-6 flex gap-4 pointer-events-auto" *ngIf="activeOfrIndex === i">
+          <a [routerLink]="['/offers']" [queryParams]="{id: offer.id}" (click)="$event.stopPropagation()"
+            class="bg-amber-500 text-zinc-900 px-6 py-3 rounded-full text-xs font-medium tracking-widest uppercase hover:bg-zinc-900 hover:text-white transition-colors">
+            Ver oferta
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carousel Controls -->
+  <div *ngIf="!loadingOfr && offers.length" class="flex justify-center items-center gap-6 mt-12 relative z-10">
+    <button (click)="prevOfr()" [disabled]="activeOfrIndex === 0"
+      class="w-12 h-12 rounded-full border flex items-center justify-center transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+      [ngClass]="themeService.isDark() ? 'border-white/20 text-white hover:bg-white/10' : 'border-zinc-900/20 text-zinc-900 hover:bg-zinc-900/10'">
+      <i class="pi pi-chevron-left"></i>
+    </button>
+    <div class="flex gap-2">
+      <span *ngFor="let o of offers; let i = index" class="w-2 h-2 rounded-full transition-all duration-300"
+        [ngClass]="i === activeOfrIndex ? 'bg-amber-400 w-8' : (themeService.isDark() ? 'bg-white/20 cursor-pointer hover:bg-white/50' : 'bg-zinc-900/20 cursor-pointer hover:bg-zinc-900/50')"
+        (click)="goToOfr(i, $event)"></span>
+    </div>
+    <button (click)="nextOfr()" [disabled]="activeOfrIndex === offers.length - 1"
+      class="w-12 h-12 rounded-full border flex items-center justify-center transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+      [ngClass]="themeService.isDark() ? 'border-white/20 text-white hover:bg-white/10' : 'border-zinc-900/20 text-zinc-900 hover:bg-zinc-900/10'">
+      <i class="pi pi-chevron-right"></i>
+    </button>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!loadingOfr && !offers.length"
+    class="max-w-7xl mx-auto px-6 text-center py-16 text-white/30 relative z-10">
+    <i class="pi pi-percentage text-4xl mb-4 block"></i>
+    <p class="tracking-widest uppercase text-sm">No hay ofertas disponibles en este momento</p>
   </div>
 </section>
 
@@ -238,8 +353,11 @@
 
   <div class="max-w-7xl mx-auto px-6 mb-16 relative z-10 text-center">
     <span class="text-xs tracking-[0.3em] uppercase text-amber-500 mb-4 block">Todo incluido</span>
-    <h2 class="text-4xl md:text-6xl font-display font-bold uppercase tracking-tight" [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'">Paquetes Turísticos</h2>
-    <p class="mt-4 max-w-2xl mx-auto font-light text-lg" [ngClass]="themeService.isDark() ? 'text-white/40' : 'text-zinc-900/40'">Disfruta de la mejor experiencia con nuestros paquetes diseñados para tu comodidad.</p>
+    <h2 class="text-4xl md:text-6xl font-display font-bold uppercase tracking-tight"
+      [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'">Paquetes Turísticos</h2>
+    <p class="mt-4 max-w-2xl mx-auto transition-all duration-300"
+      [ngClass]="themeService.isDark() ? 'font-light text-lg text-white/40' : 'font-bold text-2xl text-zinc-950'">Disfruta de la mejor experiencia con
+      nuestros paquetes diseñados para tu comodidad.</p>
   </div>
 
   <!-- Loading -->
@@ -263,7 +381,8 @@
 
       <!-- Info Content -->
       <div class="absolute bottom-0 left-0 p-8 w-full pointer-events-none">
-        <span class="text-[10px] tracking-widest uppercase text-amber-400 font-medium block mb-2">{{ pkg.destination?.city || 'Destino' }}</span>
+        <span class="text-[10px] tracking-widest uppercase text-amber-400 font-medium block mb-2">{{
+          pkg.destination?.city || 'Destino' }}</span>
         <h3 class="text-4xl font-display font-bold text-white leading-none tracking-tight">{{ pkg.name }}</h3>
 
         <!-- Hover / Active effect extra info -->
@@ -280,16 +399,18 @@
   <!-- Carousel Controls -->
   <div *ngIf="!loadingPkg && packages.length" class="flex justify-center items-center gap-6 mt-12 relative z-10">
     <button (click)="prevPkg()" [disabled]="activePkgIndex === 0"
-      class="w-12 h-12 rounded-full border border-white/20 text-white flex items-center justify-center hover:bg-white/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+      class="w-12 h-12 rounded-full border flex items-center justify-center transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+      [ngClass]="themeService.isDark() ? 'border-white/20 text-white hover:bg-white/10' : 'border-zinc-900/20 text-zinc-900 hover:bg-zinc-900/10'">
       <i class="pi pi-chevron-left"></i>
     </button>
     <div class="flex gap-2">
       <span *ngFor="let p of packages; let i = index" class="w-2 h-2 rounded-full transition-all duration-300"
-        [ngClass]="i === activePkgIndex ? 'bg-amber-400 w-8' : 'bg-white/20 cursor-pointer hover:bg-white/50'"
+        [ngClass]="i === activePkgIndex ? 'bg-amber-400 w-8' : (themeService.isDark() ? 'bg-white/20 cursor-pointer hover:bg-white/50' : 'bg-zinc-900/20 cursor-pointer hover:bg-zinc-900/50')"
         (click)="goToPkg(i, $event)"></span>
     </div>
     <button (click)="nextPkg()" [disabled]="activePkgIndex === packages.length - 1"
-      class="w-12 h-12 rounded-full border border-white/20 text-white flex items-center justify-center hover:bg-white/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+      class="w-12 h-12 rounded-full border flex items-center justify-center transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+      [ngClass]="themeService.isDark() ? 'border-white/20 text-white hover:bg-white/10' : 'border-zinc-900/20 text-zinc-900 hover:bg-zinc-900/10'">
       <i class="pi pi-chevron-right"></i>
     </button>
   </div>
@@ -322,8 +443,11 @@
 
   <div class="max-w-7xl mx-auto px-6 mb-16 relative z-10 text-center">
     <span class="text-xs tracking-[0.3em] uppercase text-amber-500 mb-4 block">Experiencias únicas</span>
-    <h2 class="text-4xl md:text-6xl font-display font-bold uppercase tracking-tight" [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'">Eventos Especiales</h2>
-    <p class="mt-4 max-w-2xl mx-auto font-light text-lg" [ngClass]="themeService.isDark() ? 'text-white/40' : 'text-zinc-900/40'">Momentos irrepetibles en los lugares más increíbles del planeta.</p>
+    <h2 class="text-4xl md:text-6xl font-display font-bold uppercase tracking-tight"
+      [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'">Eventos Especiales</h2>
+    <p class="mt-4 max-w-2xl mx-auto transition-all duration-300"
+      [ngClass]="themeService.isDark() ? 'font-light text-lg text-white/40' : 'font-bold text-2xl text-zinc-950'">Momentos irrepetibles en los lugares más
+      increíbles del planeta.</p>
   </div>
 
   <!-- Loading -->
@@ -347,7 +471,8 @@
 
       <!-- Info Content -->
       <div class="absolute bottom-0 left-0 p-8 w-full pointer-events-none">
-        <span class="text-[10px] tracking-widest uppercase text-amber-400 font-medium block mb-2">{{ evt.destination?.city || 'Destino' }}</span>
+        <span class="text-[10px] tracking-widest uppercase text-amber-400 font-medium block mb-2">{{
+          evt.destination?.city || 'Destino' }}</span>
         <h3 class="text-4xl font-display font-bold text-white leading-none tracking-tight">{{ evt.name }}</h3>
 
         <!-- Hover / Active effect extra info -->
@@ -364,16 +489,18 @@
   <!-- Carousel Controls -->
   <div *ngIf="!loadingEvt && events.length" class="flex justify-center items-center gap-6 mt-12 relative z-10">
     <button (click)="prevEvt()" [disabled]="activeEvtIndex === 0"
-      class="w-12 h-12 rounded-full border border-white/20 text-white flex items-center justify-center hover:bg-white/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+      class="w-12 h-12 rounded-full border flex items-center justify-center transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+      [ngClass]="themeService.isDark() ? 'border-white/20 text-white hover:bg-white/10' : 'border-zinc-900/20 text-zinc-900 hover:bg-zinc-900/10'">
       <i class="pi pi-chevron-left"></i>
     </button>
     <div class="flex gap-2">
       <span *ngFor="let e of events; let i = index" class="w-2 h-2 rounded-full transition-all duration-300"
-        [ngClass]="i === activeEvtIndex ? 'bg-amber-400 w-8' : 'bg-white/20 cursor-pointer hover:bg-white/50'"
+        [ngClass]="i === activeEvtIndex ? 'bg-amber-400 w-8' : (themeService.isDark() ? 'bg-white/20 cursor-pointer hover:bg-white/50' : 'bg-zinc-900/20 cursor-pointer hover:bg-zinc-900/50')"
         (click)="goToEvt(i, $event)"></span>
     </div>
     <button (click)="nextEvt()" [disabled]="activeEvtIndex === events.length - 1"
-      class="w-12 h-12 rounded-full border border-white/20 text-white flex items-center justify-center hover:bg-white/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+      class="w-12 h-12 rounded-full border flex items-center justify-center transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+      [ngClass]="themeService.isDark() ? 'border-white/20 text-white hover:bg-white/10' : 'border-zinc-900/20 text-zinc-900 hover:bg-zinc-900/10'">
       <i class="pi pi-chevron-right"></i>
     </button>
   </div>
@@ -388,16 +515,117 @@
 
 
 <!-- ═══════════════════════════════════════════
+     VISAS
+═══════════════════════════════════════════ -->
+<section id="visas" class="py-24 relative overflow-hidden transition-colors duration-500"
+  [ngClass]="themeService.isDark() ? 'bg-[#050505]' : 'bg-elevate-light'">
+  <!-- Background Grid & Icons -->
+  <div class="absolute inset-0 pointer-events-none opacity-20"
+    [style.background-image]="themeService.isDark() ? 'linear-gradient(#ffffff11 1px, transparent 1px), linear-gradient(90deg, #ffffff11 1px, transparent 1px)' : 'linear-gradient(#00000011 1px, transparent 1px), linear-gradient(90deg, #00000011 1px, transparent 1px)'"
+    [style.background-size]="'80px 80px'">
+  </div>
+  <div class="absolute top-20 left-20 text-white/5 animate-bounce-slow">
+    <i class="pi pi-id-card text-6xl"></i>
+  </div>
+  <div class="absolute bottom-40 right-20 text-white/5 animate-bounce-slow" style="animation-delay: 1.8s;">
+    <i class="pi pi-globe text-7xl"></i>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 mb-16 relative z-10 text-center">
+    <span class="text-xs tracking-[0.3em] uppercase text-amber-500 mb-4 block">Trámites y Visados</span>
+    <h2 class="text-4xl md:text-6xl font-display font-bold uppercase tracking-tight"
+      [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'">Asesoría de Visas</h2>
+    <p class="mt-4 max-w-2xl mx-auto transition-all duration-300"
+      [ngClass]="themeService.isDark() ? 'font-light text-lg text-white/40' : 'font-bold text-2xl text-zinc-950'">Gestionamos tus documentos y requisitos para viajar con total tranquilidad.</p>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loadingVis" class="max-w-7xl mx-auto px-6">
+    <div class="h-[450px] bg-white/5 rounded-[2rem] animate-pulse w-full max-w-md mx-auto"></div>
+  </div>
+
+  <!-- Carousel visas -->
+  <div *ngIf="!loadingVis && visas.length"
+    class="relative w-full h-[450px] sm:h-[500px] flex items-center justify-center [perspective:1500px]">
+
+    <div *ngFor="let visa of visas; let i = index"
+      class="absolute w-[280px] sm:w-[320px] md:w-[380px] h-[400px] sm:h-[450px] rounded-[2rem] overflow-hidden cursor-pointer"
+      [ngClass]="themeService.isDark() ? 'shadow-2xl' : 'shadow-xl bg-white border border-zinc-100'"
+      [ngStyle]="getVisCardStyle(i)" (click)="goToVis(i, $event)">
+      
+      <img *ngIf="visa.photo_url" [src]="visa.photo_url" [alt]="visa.visa_type" class="w-full h-full object-cover" />
+      <div *ngIf="!visa.photo_url" class="w-full h-full bg-zinc-800 flex items-center justify-center">
+        <i class="pi pi-id-card text-5xl text-white/20"></i>
+      </div>
+
+      <!-- Gradient overlay -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 pointer-events-none"></div>
+
+      <!-- Badge Trámite -->
+      <div class="absolute top-6 right-6 bg-amber-500/90 text-zinc-950 font-bold text-[10px] tracking-widest uppercase px-4 py-2 rounded-full shadow-lg pointer-events-none">
+        Trámite Disponible
+      </div>
+
+      <!-- Info Content -->
+      <div class="absolute bottom-0 left-0 p-8 w-full pointer-events-none">
+        <span class="text-[10px] tracking-widest uppercase text-amber-400 font-medium block mb-2">
+          {{ visa.destination?.country || 'Internacional' }}
+        </span>
+        <h3 class="text-4xl font-display font-bold text-white leading-none tracking-tight mb-4">
+          {{ visa.visa_type }}
+        </h3>
+
+        <!-- Hover / Active effect extra info -->
+        <div class="mt-6 flex gap-4 pointer-events-auto" *ngIf="activeVisIndex === i">
+          <a [routerLink]="['/visas']" [queryParams]="{id: visa.id}" (click)="$event.stopPropagation()"
+            class="bg-amber-500 text-zinc-900 px-6 py-3 rounded-full text-xs font-medium tracking-widest uppercase hover:bg-zinc-900 hover:text-white transition-colors">
+            Ver requisitos
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carousel Controls -->
+  <div *ngIf="!loadingVis && visas.length" class="flex justify-center items-center gap-6 mt-12 relative z-10">
+    <button (click)="prevVis()" [disabled]="activeVisIndex === 0"
+      class="w-12 h-12 rounded-full border flex items-center justify-center transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+      [ngClass]="themeService.isDark() ? 'border-white/20 text-white hover:bg-white/10' : 'border-zinc-900/20 text-zinc-900 hover:bg-zinc-900/10'">
+      <i class="pi pi-chevron-left"></i>
+    </button>
+    <div class="flex gap-2">
+      <span *ngFor="let v of visas; let i = index" class="w-2 h-2 rounded-full transition-all duration-300"
+        [ngClass]="i === activeVisIndex ? 'bg-amber-400 w-8' : (themeService.isDark() ? 'bg-white/20 cursor-pointer hover:bg-white/50' : 'bg-zinc-900/20 cursor-pointer hover:bg-zinc-900/50')"
+        (click)="goToVis(i, $event)"></span>
+    </div>
+    <button (click)="nextVis()" [disabled]="activeVisIndex === visas.length - 1"
+      class="w-12 h-12 rounded-full border flex items-center justify-center transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+      [ngClass]="themeService.isDark() ? 'border-white/20 text-white hover:bg-white/10' : 'border-zinc-900/20 text-zinc-900 hover:bg-zinc-900/10'">
+      <i class="pi pi-chevron-right"></i>
+    </button>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!loadingVis && !visas.length"
+    class="max-w-7xl mx-auto px-6 text-center py-16 text-white/30 relative z-10">
+    <i class="pi pi-id-card text-4xl mb-4 block"></i>
+    <p class="tracking-widest uppercase text-sm">No hay trámites de visas disponibles</p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
      CTA FINAL
 ═══════════════════════════════════════════ -->
-<section id="visas" class="relative py-32 overflow-hidden transition-colors duration-500"
+<section id="cta-section" class="relative py-32 overflow-hidden transition-colors duration-500"
   [ngClass]="themeService.isDark() ? 'bg-black' : 'bg-elevate-light'">
   <div class="absolute inset-0 opacity-20"
     style="background-image: radial-gradient(ellipse at 20% 50%, rgba(251,191,36,0.3) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(251,191,36,0.15) 0%, transparent 60%)">
   </div>
   <div class="relative z-10 max-w-3xl mx-auto px-6 text-center">
     <p class="text-xs tracking-[0.4em] uppercase text-amber-400 mb-6">Planifica tu próxima aventura</p>
-    <h2 class="text-5xl md:text-7xl font-display font-bold uppercase leading-[0.9] tracking-tighter mb-10" [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'">
+    <h2 class="text-5xl md:text-7xl font-display font-bold uppercase leading-[0.9] tracking-tighter mb-10"
+      [ngClass]="themeService.isDark() ? 'text-white' : 'text-zinc-900'">
       Viaja.<br />Explora.<br />Inspírate.
     </h2>
     <p class="text-zinc-900 dark:text-white/40 text-sm leading-relaxed max-w-md mx-auto mb-12">

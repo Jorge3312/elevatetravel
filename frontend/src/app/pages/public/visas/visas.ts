@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { VisasService } from '../../../core/services/visas';
-
+import { ConfigService } from '../../../core/services/config';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -13,11 +13,13 @@ import { FormsModule } from '@angular/forms';
 })
 export class PublicVisas implements OnInit {
   private visasService = inject(VisasService);
+  private configService = inject(ConfigService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
   visas: any[] = [];
   searchCountry: string = '';
+  whatsappNumber: string = '1234567890';
 
   get filteredVisas() {
     if (!this.searchCountry) return this.visas;
@@ -29,6 +31,12 @@ export class PublicVisas implements OnInit {
   selectedItem: any = null;
 
   ngOnInit() {
+    this.configService.getSettings().subscribe(settings => {
+      if (settings && settings.whatsapp_visas) {
+        this.whatsappNumber = settings.whatsapp_visas.replace(/\D/g, '');
+      }
+    });
+
     this.visasService.getPublicVisas().subscribe(data => {
       this.visas = data.map(v => {
         let reqs = [];

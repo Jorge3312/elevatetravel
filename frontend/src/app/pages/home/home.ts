@@ -4,7 +4,10 @@ import { RouterLink, Router } from '@angular/router';
 import { DestinationsService } from '../../core/services/destinations';
 import { PackagesService } from '../../core/services/packages';
 import { EventsService } from '../../core/services/events';
+import { OffersService } from '../../core/services/offers';
+import { VisasService } from '../../core/services/visas';
 import { ThemeService } from '../../core/services/theme.service';
+import { ConfigService } from '../../core/services/config';
 
 @Component({
   selector: 'app-home',
@@ -29,18 +32,32 @@ export class Home implements OnInit {
   private destService = inject(DestinationsService);
   private pkgService = inject(PackagesService);
   private evtService = inject(EventsService);
+  private offerService = inject(OffersService);
+  private visaService = inject(VisasService);
   public themeService = inject(ThemeService);
+  private configService = inject(ConfigService);
 
   destinations: any[] = [];
   packages: any[] = [];
   events: any[] = [];
+  offers: any[] = [];
+  visas: any[] = [];
   heroDestination: any = null;
+  whatsappNumber = '1234567890';
 
   loadingDest = true;
   loadingPkg = true;
   loadingEvt = true;
+  loadingOfr = true;
+  loadingVis = true;
 
   ngOnInit() {
+    this.configService.getSettings().subscribe(settings => {
+      if (settings && settings.whatsapp_general) {
+        this.whatsappNumber = settings.whatsapp_general.replace(/\D/g, '');
+      }
+    });
+
     this.destService.getPublicDestinations().subscribe({
       next: (data) => {
         this.destinations = data;
@@ -53,13 +70,39 @@ export class Home implements OnInit {
     });
 
     this.pkgService.getPublicPackages().subscribe({
-      next: (data) => { this.packages = data; this.loadingPkg = false; },
+      next: (data) => {
+        this.packages = data;
+        this.loadingPkg = false;
+        this.activePkgIndex = Math.floor(data.length / 2) || 0;
+      },
       error: () => { this.loadingPkg = false; }
     });
 
     this.evtService.getPublicEvents().subscribe({
-      next: (data) => { this.events = data; this.loadingEvt = false; },
+      next: (data) => {
+        this.events = data;
+        this.loadingEvt = false;
+        this.activeEvtIndex = Math.floor(data.length / 2) || 0;
+      },
       error: () => { this.loadingEvt = false; }
+    });
+
+    this.offerService.getPublicOffers().subscribe({
+      next: (data) => {
+        this.offers = data;
+        this.loadingOfr = false;
+        this.activeOfrIndex = Math.floor(data.length / 2) || 0;
+      },
+      error: () => { this.loadingOfr = false; }
+    });
+
+    this.visaService.getPublicVisas().subscribe({
+      next: (data) => {
+        this.visas = data;
+        this.loadingVis = false;
+        this.activeVisIndex = Math.floor(data.length / 2) || 0;
+      },
+      error: () => { this.loadingVis = false; }
     });
   }
 
@@ -76,6 +119,8 @@ export class Home implements OnInit {
   activeDestIndex = 0;
   activePkgIndex = 0;
   activeEvtIndex = 0;
+  activeOfrIndex = 0;
+  activeVisIndex = 0;
 
   getDestCardStyle(index: number) {
     return this.getGenericCardStyle(index, this.activeDestIndex);
@@ -87,6 +132,14 @@ export class Home implements OnInit {
 
   getEvtCardStyle(index: number) {
     return this.getGenericCardStyle(index, this.activeEvtIndex);
+  }
+
+  getOfrCardStyle(index: number) {
+    return this.getGenericCardStyle(index, this.activeOfrIndex);
+  }
+
+  getVisCardStyle(index: number) {
+    return this.getGenericCardStyle(index, this.activeVisIndex);
   }
 
   private getGenericCardStyle(index: number, activeIndex: number) {
@@ -190,6 +243,26 @@ export class Home implements OnInit {
     }
   }
 
+  goToOfr(index: number, event: Event) {
+    if (this.activeOfrIndex !== index) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.activeOfrIndex = index;
+    } else {
+      this.router.navigate(['/offers'], { queryParams: { id: this.offers[index].id } });
+    }
+  }
+
+  goToVis(index: number, event: Event) {
+    if (this.activeVisIndex !== index) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.activeVisIndex = index;
+    } else {
+      this.router.navigate(['/visas'], { queryParams: { id: this.visas[index].id } });
+    }
+  }
+
   nextDest() {
     if (this.activeDestIndex < this.destinations.length - 1) this.activeDestIndex++;
   }
@@ -212,5 +285,21 @@ export class Home implements OnInit {
 
   prevEvt() {
     if (this.activeEvtIndex > 0) this.activeEvtIndex--;
+  }
+
+  nextOfr() {
+    if (this.activeOfrIndex < this.offers.length - 1) this.activeOfrIndex++;
+  }
+
+  prevOfr() {
+    if (this.activeOfrIndex > 0) this.activeOfrIndex--;
+  }
+
+  nextVis() {
+    if (this.activeVisIndex < this.visas.length - 1) this.activeVisIndex++;
+  }
+
+  prevVis() {
+    if (this.activeVisIndex > 0) this.activeVisIndex--;
   }
 }

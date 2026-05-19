@@ -1,34 +1,37 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PackagesService } from '../../../core/services/packages';
 import { OffersService } from '../../../core/services/offers';
 import { ConfigService } from '../../../core/services/config';
 import { FormsModule } from '@angular/forms';
+import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
-  selector: 'app-public-packages',
+  selector: 'app-public-offers',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './packages.html'
+  templateUrl: './offers.html'
 })
-export class PublicPackages implements OnInit {
-  private packagesService = inject(PackagesService);
+export class PublicOffers implements OnInit {
   private offersService = inject(OffersService);
   private configService = inject(ConfigService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  public themeService = inject(ThemeService);
 
-  packages: any[] = [];
   offers: any[] = [];
   searchCountry: string = '';
   whatsappNumber: string = '1234567890';
 
-  get filteredPackages() {
-    if (!this.searchCountry) return this.packages;
-    return this.packages.filter(p => 
-      p.destination?.country?.toLowerCase().includes(this.searchCountry.toLowerCase()) ||
-      p.country?.toLowerCase().includes(this.searchCountry.toLowerCase())
+  get filteredOffers() {
+    if (!this.searchCountry) return this.offers;
+    const search = this.searchCountry.toLowerCase();
+    return this.offers.filter(o => 
+      o.country?.toLowerCase().includes(search) ||
+      o.title?.toLowerCase().includes(search) ||
+      o.package?.name?.toLowerCase().includes(search) ||
+      o.package?.destination?.country?.toLowerCase().includes(search) ||
+      o.package?.destination?.city?.toLowerCase().includes(search)
     );
   }
 
@@ -41,31 +44,24 @@ export class PublicPackages implements OnInit {
       }
     });
 
-    this.packagesService.getPublicPackages().subscribe(data => {
-      this.packages = data;
-      this.offersService.getPublicOffers().subscribe(offData => {
-        this.offers = offData;
-        this.route.queryParams.subscribe(params => {
-          if (params['id']) {
-            this.selectedItem = this.packages.find(p => p.id === params['id']) || null;
-          } else {
-            this.selectedItem = null;
-          }
-        });
+    this.offersService.getPublicOffers().subscribe(data => {
+      this.offers = data;
+      this.route.queryParams.subscribe(params => {
+        if (params['id']) {
+          this.selectedItem = this.offers.find(o => o.id === params['id']) || null;
+        } else {
+          this.selectedItem = null;
+        }
       });
     });
   }
 
-  showDetails(pkg: any) {
-    this.router.navigate([], { queryParams: { id: pkg.id } });
+  showDetails(offer: any) {
+    this.router.navigate([], { queryParams: { id: offer.id } });
   }
 
   closeDetails() {
     this.router.navigate([], { queryParams: {} });
-  }
-
-  getPackageOffer(pkgId: string): any {
-    return this.offers.find(o => o.package_id === pkgId);
   }
 
   getDiscountedPrice(price: number, percentage: number): number {
@@ -74,4 +70,3 @@ export class PublicPackages implements OnInit {
     return rawPrice * (1 - rawPercent / 100);
   }
 }
-

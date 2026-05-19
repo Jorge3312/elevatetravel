@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EventsService } from '../../../core/services/events';
-
+import { ConfigService } from '../../../core/services/config';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class PublicEvents implements OnInit {
   private eventsService = inject(EventsService);
+  private configService = inject(ConfigService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -20,6 +21,7 @@ export class PublicEvents implements OnInit {
   searchCountry: string = '';
   startDate: string = '';
   endDate: string = '';
+  whatsappNumber: string = '1234567890';
 
   get filteredEvents() {
     return this.events.filter(e => {
@@ -44,6 +46,12 @@ export class PublicEvents implements OnInit {
   selectedItem: any = null;
 
   ngOnInit() {
+    this.configService.getSettings().subscribe(settings => {
+      if (settings && settings.whatsapp_general) {
+        this.whatsappNumber = settings.whatsapp_general.replace(/\D/g, '');
+      }
+    });
+
     this.eventsService.getPublicEvents().subscribe(data => {
       this.events = data;
       this.route.queryParams.subscribe(params => {

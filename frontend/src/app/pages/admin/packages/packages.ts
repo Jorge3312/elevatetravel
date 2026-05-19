@@ -36,12 +36,29 @@ export class Packages implements OnInit {
   isEditing = false;
   currentId: string | null = null;
 
-  includesOptions = [
-    { label: 'NOCHES DE ALOJAMIENTO HOTEL A ELECCIÓN.', value: 'ALOJAMIENTO' },
-    { label: 'DESAYUNOS', value: 'DESAYUNOS' },
-    { label: 'Seguro DE ASISTENCIA AL VIAJERO.', value: 'Seguro DE ASISTENCIA AL VIAJERO.' },
-    { label: 'TRASLADOS AEROPUERTO - HOTEL - AEROPUERTO.', value: 'TRASLADOS AEROPUERTO - HOTEL - AEROPUERTO.' }
-  ];
+  includesList: string[] = [];
+  newService = '';
+
+  addService() {
+    if (this.newService.trim()) {
+      const upperService = this.newService.trim().toUpperCase();
+      if (!this.includesList.includes(upperService)) {
+        this.includesList.push(upperService);
+      }
+      this.newService = '';
+    }
+  }
+
+  addSuggestion(suggestion: string) {
+    const upperSuggestion = suggestion.toUpperCase();
+    if (!this.includesList.includes(upperSuggestion)) {
+      this.includesList.push(upperSuggestion);
+    }
+  }
+
+  removeService(index: number) {
+    this.includesList.splice(index, 1);
+  }
 
   form: FormGroup = this.fb.group({
     destination_id: ['', Validators.required],
@@ -83,6 +100,8 @@ export class Packages implements OnInit {
   showDialog() {
     this.isEditing = false;
     this.currentId = null;
+    this.includesList = [];
+    this.newService = '';
     this.form.reset({ is_active: true, price_from: 0, days: 0, nights: 0, includes: [] });
     this.displayDialog = true;
   }
@@ -90,6 +109,8 @@ export class Packages implements OnInit {
   editPackage(pkg: any) {
     this.isEditing = true;
     this.currentId = pkg.id;
+    this.includesList = pkg.includes ? [...pkg.includes] : [];
+    this.newService = '';
     this.form.patchValue({
       ...pkg,
       destination_id: pkg.destination?.id
@@ -99,6 +120,11 @@ export class Packages implements OnInit {
 
   savePackage() {
     if (this.form.invalid) return;
+
+    this.form.patchValue({
+      includes: this.includesList
+    });
+
     const req = this.isEditing && this.currentId
       ? this.packagesService.update(this.currentId, this.form.value)
       : this.packagesService.create(this.form.value);

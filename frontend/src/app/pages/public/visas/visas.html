@@ -85,7 +85,7 @@
       <div class="bg-white dark:bg-black/40 rounded-3xl p-8 backdrop-blur-md border border-zinc-200 dark:border-white/10 mt-auto shadow-2xl">
         <div class="space-y-4">
           <h4 class="text-xs tracking-widest uppercase text-zinc-900 dark:text-white/50 text-center mb-6">¿Tienes preguntas o deseas iniciar el trámite?</h4>
-          <a href="https://wa.me/1234567890?text=Hola, necesito información sobre la visa de {{ selectedItem.visa_type }} para {{ selectedItem.destination?.country }}" target="_blank" 
+          <a [href]="'https://wa.me/' + whatsappNumber + '?text=Hola, necesito información sobre la visa de ' + selectedItem.visa_type + ' para ' + (selectedItem.destination?.country || '')" target="_blank" 
              class="flex items-center justify-center gap-3 w-full bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20 border border-[#25D366]/20 px-6 py-4 rounded-full text-sm uppercase tracking-widest transition-all hover:scale-[1.02]">
             <i class="pi pi-whatsapp text-xl"></i>
             Contactar por Whatsapp

@@ -1,0 +1,155 @@
+@if (!selectedItem) {
+<div class="pt-32 pb-20 px-6 max-w-7xl mx-auto min-h-screen">
+  <div class="mb-16">
+    <span class="text-zinc-900 dark:text-white/50 text-xs tracking-[0.3em] uppercase mb-4 block">Tarifas Exclusivas</span>
+    <h1 class="text-4xl md:text-6xl font-light tracking-tight mb-8">Ofertas Especiales</h1>
+
+    <!-- Filter Bar -->
+    <div class="glass-panel p-4 md:p-6 rounded-2xl flex flex-wrap gap-6 items-end max-w-2xl">
+      <div class="flex-1 min-w-[200px]">
+        <label class="text-[10px] tracking-widest uppercase text-zinc-900 dark:text-white/40 mb-3 block">Filtrar por Destino o País</label>
+        <div class="relative">
+          <i class="pi pi-search absolute left-4 top-1/2 -translate-y-1/2 text-zinc-900 dark:text-white/30 text-xs"></i>
+          <input type="text" [(ngModel)]="searchCountry" placeholder="Ej. Francia, París, Safari..." 
+            class="w-full bg-black/5 dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-amber-500/50 transition-all placeholder:text-zinc-400 dark:placeholder:text-white/20">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (filteredOffers.length === 0) {
+    <div class="text-center py-20 bg-white/5 backdrop-blur-sm rounded-3xl border border-zinc-200/50 dark:border-white/5">
+      <i class="pi pi-tags text-4xl mb-4 text-zinc-400 dark:text-white/30"></i>
+      <p class="text-zinc-500 dark:text-white/50 text-lg">No hay ofertas disponibles en este momento.</p>
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      @for (offer of filteredOffers; track offer.id) {
+        <div class="glass-panel rounded-2xl overflow-hidden cursor-pointer group" (click)="showDetails(offer)">
+          <div class="h-64 relative overflow-hidden bg-white dark:bg-black/5 flex items-center justify-center">
+            <i class="pi pi-tag text-6xl text-zinc-900 dark:text-white/20 group-hover:scale-110 transition-transform duration-700" *ngIf="!offer.photo_url && !offer.package?.photo_url && !offer.package?.destination?.photo_url"></i>
+            <img *ngIf="offer.photo_url || offer.package?.photo_url || offer.package?.destination?.photo_url" 
+                 [src]="offer.photo_url || offer.package?.photo_url || offer.package?.destination?.photo_url" 
+                 class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+            
+            <!-- Custom requested badge: "descuento de [porcentaje]%" -->
+            <div class="absolute top-4 left-4 bg-amber-500/90 text-white font-bold px-4 py-1.5 rounded-full text-xs tracking-wider uppercase shadow-md backdrop-blur-sm">
+              Descuento de {{ offer.discount_percentage | number:'1.0-0' }}%
+            </div>
+          </div>
+          <div class="p-6">
+            <p class="text-zinc-900 dark:text-white/50 text-xs tracking-widest uppercase mb-2">
+              {{ offer.country || offer.package?.destination?.city || 'Destino Exclusivo' }}
+            </p>
+            <h3 class="text-xl font-light mb-4">{{ offer.title }}</h3>
+            
+            <div class="flex justify-between items-end border-t border-zinc-100 dark:border-white/5 pt-4 mt-2">
+              <div class="flex flex-col">
+                <span class="text-[10px] text-zinc-400 dark:text-white/40 uppercase tracking-widest">Antes</span>
+                <span class="text-sm line-through text-zinc-400 dark:text-white/40 font-light">
+                  {{ (offer.package?.price_from || offer.package?.base_price) | currency }}
+                </span>
+              </div>
+              <div class="flex flex-col items-end">
+                <span class="text-[10px] text-amber-600 dark:text-amber-400 uppercase tracking-widest font-semibold">Ahora</span>
+                <span class="text-xl font-medium text-amber-600 dark:text-amber-400">
+                  {{ getDiscountedPrice(offer.package?.price_from || offer.package?.base_price, offer.discount_percentage) | currency }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+} @else {
+<!-- Detail Section -->
+<div class="pt-32 pb-20 px-6 max-w-7xl mx-auto animate-fadein min-h-screen">
+  <button (click)="closeDetails()" class="mb-8 text-zinc-900 dark:text-white/50 hover:text-zinc-900 dark:text-white transition-colors flex items-center gap-2 text-sm uppercase tracking-widest">
+    <i class="pi pi-arrow-left"></i> Volver a Ofertas
+  </button>
+  
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+    <!-- Left Column (Image & Includes) -->
+    <div class="flex flex-col gap-6">
+      <div class="rounded-3xl overflow-hidden h-[400px] lg:h-[500px] relative border border-zinc-100 dark:border-white/5">
+        <img [src]="selectedItem.photo_url || selectedItem.package?.photo_url || selectedItem.package?.destination?.photo_url || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070'" 
+             class="w-full h-full object-cover">
+        
+        <!-- Custom badge -->
+        <div class="absolute top-6 left-6 bg-amber-500 text-white font-bold px-5 py-2 rounded-full text-xs tracking-widest uppercase shadow-lg">
+          Descuento de {{ selectedItem.discount_percentage | number:'1.0-0' }}%
+        </div>
+      </div>
+      
+      <!-- Includes Section underneath the image -->
+      @if (selectedItem.package?.includes && selectedItem.package.includes.length > 0) {
+        <div>
+          <h3 class="text-sm font-medium mb-5 uppercase tracking-widest text-zinc-900 dark:text-white/60">El paquete incluye:</h3>
+          <div class="grid grid-cols-1 gap-4">
+            @for (inc of selectedItem.package.includes; track $index) {
+              <div class="bg-white dark:bg-black/5 dark:bg-white/5 rounded-2xl p-4 flex items-center gap-5 border border-zinc-100 dark:border-white/5 hover:bg-white dark:bg-black/10 dark:bg-white/10 transition-colors">
+                <div class="bg-white dark:bg-black/10 dark:bg-white/10 rounded-full w-10 h-10 flex items-center justify-center shrink-0">
+                  <i class="pi pi-check text-zinc-900 dark:text-white/80 text-lg"></i>
+                </div>
+                <span class="text-zinc-900 dark:text-white/80 font-light">{{ inc }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+    
+    <!-- Details Column -->
+    <div class="flex flex-col justify-start">
+      <div class="inline-flex items-center gap-2 text-zinc-900 dark:text-white/50 text-xs tracking-[0.2em] uppercase mb-4">
+        <i class="pi pi-map-marker text-zinc-900 dark:text-white/40"></i>
+        <span>Destino: {{ selectedItem.package?.destination?.city || selectedItem.country || 'No especificado' }}{{ selectedItem.package?.destination?.country ? ', ' + selectedItem.package?.destination?.country : '' }}</span>
+      </div>
+      
+      <h1 class="text-4xl md:text-5xl font-light tracking-tight mb-6 leading-tight">{{ selectedItem.title }}</h1>
+      
+      <p class="text-zinc-900 dark:text-white/70 font-light leading-relaxed mb-8 text-lg">
+        {{ selectedItem.description || selectedItem.package?.description || 'Aprovecha esta tarifa promocional exclusiva por tiempo limitado para vivir una experiencia inigualable.' }}
+      </p>
+
+      <div class="border-y border-zinc-200 dark:border-white/10 py-8 mb-8 space-y-6">
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <p class="text-zinc-900 dark:text-white/40 text-xs tracking-widest uppercase mb-2">Duración</p>
+            <p class="text-xl font-light tracking-wide">{{ selectedItem.package?.days || 5 }} Días / {{ selectedItem.package?.nights || 4 }} Noches</p>
+          </div>
+          <div>
+            <p class="text-zinc-900 dark:text-white/40 text-xs tracking-widest uppercase mb-2">Paquete Base</p>
+            <p class="text-xl font-light tracking-wide text-zinc-900 dark:text-white/80">{{ selectedItem.package?.name }}</p>
+          </div>
+        </div>
+
+        <div class="pt-6 border-t border-zinc-200 dark:border-white/10">
+          <p class="text-zinc-900 dark:text-white/40 text-xs tracking-widest uppercase mb-2">Inversión</p>
+          
+          <div class="flex items-baseline gap-3 flex-wrap mb-4">
+            <div class="flex flex-col">
+              <span class="text-xs line-through text-zinc-400 dark:text-white/30 font-light font-sans">
+                Antes {{ (selectedItem.package?.price_from || selectedItem.package?.base_price) | currency }}
+              </span>
+              <span class="text-3xl font-light tracking-tight text-amber-600 dark:text-amber-400">
+                {{ getDiscountedPrice(selectedItem.package?.price_from || selectedItem.package?.base_price, selectedItem.discount_percentage) | currency }}
+              </span>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <a [href]="'https://wa.me/' + whatsappNumber + '?text=Hola, estoy muy interesado en la oferta de descuento de ' + (selectedItem.discount_percentage | number:'1.0-0') + '% para el paquete: ' + selectedItem.package?.name" target="_blank" 
+               class="inline-flex items-center justify-center gap-3 bg-[#25D366] text-white hover:bg-[#22c35e] px-8 py-3.5 rounded-full text-xs uppercase tracking-widest transition-all hover:scale-[1.02] font-semibold shadow-lg shadow-green-500/10">
+              <i class="pi pi-whatsapp text-lg"></i>
+              Reservar con Descuento
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}

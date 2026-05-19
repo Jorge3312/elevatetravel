@@ -61,7 +61,46 @@
       </div>
       <div class="field">
         <label class="text-sm text-white/70 block mb-2">Incluye (Servicios)</label>
-        <p-multiselect [options]="includesOptions" formControlName="includes" optionLabel="label" optionValue="value" placeholder="Seleccionar opciones" appendTo="body" styleClass="w-full" display="chip"></p-multiselect>
+        
+        <!-- Suggestions Chips -->
+        <div class="mb-3">
+          <span class="text-xs text-white/50 block mb-1.5 font-medium uppercase tracking-wider">Sugerencias rápidas:</span>
+          <div class="flex flex-wrap gap-1.5">
+            <button type="button" (click)="addSuggestion('ALOJAMIENTO')" 
+              class="text-xs bg-white/5 hover:bg-white/10 border border-white/10 px-2.5 py-1 rounded-full text-white/80 transition-colors">
+              + Alojamiento
+            </button>
+            <button type="button" (click)="addSuggestion('DESAYUNOS')" 
+              class="text-xs bg-white/5 hover:bg-white/10 border border-white/10 px-2.5 py-1 rounded-full text-white/80 transition-colors">
+              + Desayunos
+            </button>
+            <button type="button" (click)="addSuggestion('Seguro DE ASISTENCIA AL VIAJERO.')" 
+              class="text-xs bg-white/5 hover:bg-white/10 border border-white/10 px-2.5 py-1 rounded-full text-white/80 transition-colors">
+              + Seguro de Viaje
+            </button>
+            <button type="button" (click)="addSuggestion('TRASLADOS AEROPUERTO - HOTEL - AEROPUERTO.')" 
+              class="text-xs bg-white/5 hover:bg-white/10 border border-white/10 px-2.5 py-1 rounded-full text-white/80 transition-colors">
+              + Traslados
+            </button>
+          </div>
+        </div>
+
+        <!-- Text Input with Plus button -->
+        <div class="flex gap-2 mb-3">
+          <input pInputText [(ngModel)]="newService" [ngModelOptions]="{standalone: true}" class="flex-1 bg-black/50 border-white/10" placeholder="Añadir un servicio..." (keyup.enter)="addService(); $event.preventDefault();" />
+          <button type="button" pButton icon="pi pi-plus" (click)="addService()" class="p-button-outlined"></button>
+        </div>
+
+        <!-- Added services list -->
+        <div class="space-y-2 max-h-48 overflow-y-auto">
+          <div *ngFor="let svc of includesList; let i = index" class="flex items-start justify-between bg-white/5 p-3 rounded-lg border border-white/10">
+            <span class="text-sm text-white/90">{{ svc }}</span>
+            <button type="button" pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger p-button-sm -my-2 -mr-2" (click)="removeService(i)"></button>
+          </div>
+          <div *ngIf="includesList.length === 0" class="text-sm text-white/40 italic text-center py-4 border border-dashed border-white/10 rounded-lg">
+            No hay servicios añadidos.
+          </div>
+        </div>
       </div>
       <div class="field">
         <label class="text-sm text-white/70 block mb-2">Descripción</label>
