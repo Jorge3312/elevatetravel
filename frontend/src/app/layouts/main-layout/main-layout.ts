@@ -18,6 +18,9 @@ export class MainLayout implements OnInit {
   isHome = true;
   router = inject(Router);
   whatsappNumber = '1234567890';
+  whatsappGeneralDisplay = '';
+  whatsappVisas = '';
+  whatsappVisasDisplay = '';
 
   constructor() {
     this.router.events.subscribe(e => {
@@ -30,8 +33,15 @@ export class MainLayout implements OnInit {
 
   ngOnInit() {
     this.configService.getSettings().subscribe(settings => {
-      if (settings && settings.whatsapp_general) {
-        this.whatsappNumber = settings.whatsapp_general.replace(/\D/g, '');
+      if (settings) {
+        if (settings.whatsapp_general) {
+          this.whatsappNumber = settings.whatsapp_general.replace(/\D/g, '');
+          this.whatsappGeneralDisplay = settings.whatsapp_general;
+        }
+        if (settings.whatsapp_visas) {
+          this.whatsappVisas = settings.whatsapp_visas.replace(/\D/g, '');
+          this.whatsappVisasDisplay = settings.whatsapp_visas;
+        }
       }
     });
   }

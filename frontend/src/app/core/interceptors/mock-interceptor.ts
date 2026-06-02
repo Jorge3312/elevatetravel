@@ -29,8 +29,9 @@ const mockOffers = [
 ];
 
 const mockConfig = [
-  { key: 'whatsapp_number', value: '+1234567890' },
-  { key: 'contact_email', value: 'hello@elevatetravel.com' }
+  { key: 'whatsapp_general', value: '+591 76939440' },
+  { key: 'whatsapp_visas', value: '+591 65344948' },
+  { key: 'contact_email', value: 'elevateviajes22@gmail.com' }
 ];
 
 export const mockInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> => {

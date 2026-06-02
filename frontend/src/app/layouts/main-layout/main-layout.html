@@ -136,8 +136,30 @@
       <div>
         <h4 class="text-xs font-semibold tracking-widest uppercase mb-5 text-zinc-900 dark:text-white/80">Contacto</h4>
         <ul class="space-y-3 text-zinc-900 dark:text-white/40 text-sm">
-          <li>hello&#64;elevatetravel.com</li>
-          <li>+1 234 567 890</li>
+          <li>
+            <a href="mailto:elevateviajes22@gmail.com" class="hover:text-amber-500 transition-colors">
+              <i class="pi pi-envelope mr-2"></i> elevateviajes22@gmail.com
+            </a>
+          </li>
+          <li *ngIf="whatsappGeneralDisplay">
+            <a [href]="'https://wa.me/' + whatsappNumber" target="_blank" class="hover:text-[#25D366] transition-colors">
+              <i class="pi pi-whatsapp mr-2"></i> {{ whatsappGeneralDisplay }} (General)
+            </a>
+          </li>
+          <li *ngIf="whatsappVisasDisplay">
+            <a [href]="'https://wa.me/' + whatsappVisas" target="_blank" class="hover:text-[#25D366] transition-colors">
+              <i class="pi pi-whatsapp mr-2"></i> {{ whatsappVisasDisplay }} (Visas)
+            </a>
+          </li>
+        </ul>
+        <h4 class="text-xs font-semibold tracking-widest uppercase mt-6 mb-5 text-zinc-900 dark:text-white/80">Ubicación</h4>
+        <ul class="space-y-3 text-zinc-900 dark:text-white/40 text-sm">
+          <li>
+            <a href="https://maps.app.goo.gl/gvtJtKdea88Gz9UCA" target="_blank" class="hover:text-amber-500 transition-colors flex items-start leading-relaxed">
+              <i class="pi pi-map-marker mr-2 mt-0.5 shrink-0"></i>
+              <span>AV. AMERICA ESTE #1095 casi Eudoro Galindo edif. América</span>
+            </a>
+          </li>
         </ul>
       </div>
     </div>
